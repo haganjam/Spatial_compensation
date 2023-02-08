@@ -118,6 +118,9 @@ tra_a <-
   filter( !(binomial_code %in% c("-9999", "") | is.na(binomial_code) | is.na(depth_interpolated) )  )
 names(tra_a)
 
+# check the summary
+summary(tra_a)
+
 # reorganise the column names
 tra_a <- 
   tra_a %>%
@@ -170,7 +173,7 @@ lm.allo <- function(data, slope, e.vars) {
 }
 
 # set up the explanatory variables for the different models
-exp.vars <- list(c("log_length_cm*log_circum_cm"),
+exp.vars <- list(c("log_length_cm", "log_circum_cm", "log_length_cm:log_circum_cm"),
                  c("log_length_cm", "log_circum_cm", "log_circum_cm2"),
                  c("log_length_cm", "log_length_cm", "log_length_cm2"),
                  c("log_length_cm","log_circum_cm"),
@@ -199,13 +202,35 @@ lm.x <-
   
 } )
 
-# check the best models
-lapply(lm.x, function(x) print(x))
+# generate a table for these models
+names(lm.x) <- c("fu_sp", "fu_ve", "as_no", "fu_se")
+ts1 <- bind_rows(lm.x, .id = "species")
+
+# reorder the factors
+ts1$species <- factor(ts1$species, levels = c("fu_sp", "fu_ve", "as_no", "fu_se"))
+levels(ts1$species) <- c("F. spiralis", "F. vesiculosus", "A. nodosum", "F. serratus")
+
+# generate a summary table
+ts1 <- 
+  ts1 %>%
+  mutate(term = ifelse(term == "(Intercept)", "(Int.)", term)) %>%
+  group_by(species, model) %>%
+  summarise(terms = paste(term, collapse = " + "), 
+            N = first(nobs),
+            r2 = first(r.squared), 
+            AIC = first(AIC), .groups = "drop") %>%
+  select(-model) %>%
+  arrange(species, AIC)
+
+# which models are best for each species?
+ts1 %>%
+  group_by(species) %>%
+  filter(AIC == min(AIC))
 
 # run the best models for each species
 
 # F. spiralis
-fu_sp <- lm(log_dry_weight_g ~ log_length_cm*log_circum_cm, 
+fu_sp <- lm(log_dry_weight_g ~ log_length_cm + log_circum_cm + log_circum_cm2, 
             data = filter(allo, binomial_code == "fu_sp"))
 summary(fu_sp)
 
@@ -216,7 +241,7 @@ plot(df1$dry_weight_g, df1$dry_weight_pred)
 abline(a = 0, b = 1, col = "red")
 
 # F. vesiculosus
-fu_ve <- lm(log_dry_weight_g ~ log_length_cm*log_circum_cm, 
+fu_ve <- lm(log_dry_weight_g ~ log_length_cm + log_circum_cm + log_circum_cm2, 
             data = filter(allo, binomial_code == "fu_ve"))
 summary(fu_ve)
 
@@ -227,7 +252,7 @@ plot(df2$dry_weight_g, df2$dry_weight_pred)
 abline(a = 0, b = 1, col = "red")
 
 # A. nodosum
-as_no <- lm(log_dry_weight_g ~ log_length_cm*log_circum_cm, 
+as_no <- lm(log_dry_weight_g ~ log_length_cm + log_circum_cm, 
             data = filter(allo, binomial_code == "as_no"))
 summary(as_no)
 
@@ -238,7 +263,7 @@ plot(df3$dry_weight_g, df3$dry_weight_pred)
 abline(a = 0, b = 1, col = "red")
 
 # F. serratus
-fu_se <- lm(log_dry_weight_g ~ log_length_cm*log_circum_cm, 
+fu_se <- lm(log_dry_weight_g ~ log_length_cm + log_circum_cm, 
             data = filter(allo, binomial_code == "fu_se"))
 summary(fu_se)
 
@@ -276,36 +301,42 @@ ggsave(filename = here("figures/figS1.png"), p1, dpi = 400,
 df.fit %>%
   mutate(error = (abs(dry_weight_g-dry_weight_pred)/dry_weight_g)*100 ) %>%
   group_by(binomial_code) %>%
-  summarise(error_med = median(error),
+  summarise(n = n(),
+            error_med = median(error),
             error_m = mean(error),
             error_sd = sd(error))
 
+# use these models to predict the dry weight for the individuals in the transect
 
-lm.coef <- 
-  lapply(list(fu_sp, fu_ve, as_no, fu_se), function(x) {
-  
-  y <- coef(x)
-  names(y) <- NULL
-  df <- data.frame(int = y[1],
-                   s1 = y[2],
-                   s2 = y[3],
-                   s3 = y[4])
-  return(df)
-  
-} )
-
-# bind these coefficients into a data.frame
-lm.coef <- bind_rows(lm.coef)
-lm.coef$binomial_code <- c("fu_sp", "fu_ve", "as_no", "fu_se")
-
-# bind these coefficients to the transect data
-tra_a <- full_join(tra_a, lm.coef, by = "binomial_code")
-
-# use these models to get the dry mass of each individual sampled
+# first, get the relevant variables
 tra_a <- 
   tra_a %>%
-  mutate(dry_mass_g = exp(int + (s1*log(length_cm)) + (s2*log(circum_cm)) + (s3*log(length_cm)*log(circum_cm)) )) %>%
-  select(-int, -s1, -s2, -s3) %>%
+  mutate(log_length_cm = log(length_cm),
+         log_length_cm2 = (log(length_cm))^2,
+         log_circum_cm = log(circum_cm),
+         log_circum_cm2 = (log(circum_cm)^2))
+
+# split by the binomial code
+tra_a <- split(tra_a, tra_a$binomial_code)
+lm.list <- list(as_no, fu_se, fu_sp, fu_ve)
+
+# predict the dry weights
+tra_a <- 
+  
+  mapply(function(x, y) {
+  
+  x[["dry_mass_g"]] <- exp(predict(object = y, x))
+  return(x)
+  
+}, tra_a, lm.list, SIMPLIFY = FALSE)
+
+# bind back into a data.frame
+tra_a <- bind_rows(tra_a)
+
+# organise this data.frame
+tra_a <- 
+  tra_a %>%
+  select(-starts_with("log")) %>%
   filter(!is.na(dry_mass_g))
 
 # check distribution of biomass per transect
@@ -363,6 +394,6 @@ p2 <-
   theme_meta()
 plot(p2)
 
-saveRDS(object = p2, file = "figures/Fig_1a.rds")
+saveRDS(object = p2, file = "figures/fig1a.rds")
 
 ### END
