@@ -9,10 +9,6 @@ library(readr)
 library(rethinking)
 library(ggplot2)
 
-# set the working directory
-setwd("C:/Users/james/OneDrive/PhD_Gothenburg/Chapter_2_Fucus_landscape/compensation_analysis")
-getwd()
-
 # load the plotting theme
 source("scripts/function_plotting_theme.R")
 
@@ -28,30 +24,103 @@ gr_dat <-
 # check the sites
 unique(gr_dat$site_code)
 
-# get site Y which is the same site as the transects
+# get site X and Y which is the same site as the transects
 gr_dat <- 
   gr_dat %>%
-  filter(site_code == "Y")
+  filter(site_code %in% c("X", "Y") )
 
 # compare the growth rates overall among species
 ggplot(data = gr_dat,
        mapping = aes(x = binomial_code, dry_weight_g_daily_change)) +
   geom_boxplot()
 
+# relationship between growth and depth among species
+ggplot(data = gr_dat,
+       mapping = aes(x = depth_treatment, y = dry_weight_g_daily_change)) +
+  geom_point() +
+  geom_smooth() +
+  facet_wrap(~binomial_code) +
+  theme_classic()
+
+# let's use basis splines
+
+# subset fucus vesiculosus
+dat_sp <- gr_dat[gr_dat$binomial_code == "fu_ve", ]
+dat_sp <- list(depth = dat_sp$depth_treatment,
+               growth = dat_sp$dry_weight_g_daily_change)
+
+# choose the number of knots
+num_knots <- 1
+
+# set the position of the knots in proportion to the number of observations
+knot_list <- seq(min(dat_sp$depth), max(dat_sp$depth), length.out=num_knots)
+
+# construct basis splines of degree 3 (i.e. cubic splines)
+library(splines)
+B <- bs(dat_sp$depth,
+        knots=knot_list[-c(1, num_knots)] ,
+        degree = 1 , intercept=TRUE )
+
+# let's fit this model using ulam()
+m1 <- quap(
+  alist(
+    G ~ dnorm( mu , sigma ) ,
+    mu <- a + B %*% w ,
+    a ~ dnorm(0,10),
+    w ~ dnorm(0,10),
+    sigma ~ dexp(1)
+  ), 
+  data = list( G = dat_sp$growth , B = B ),
+  start = list( w=rep( 0 , ncol(B) ) ))
+
+# check the model fit
+mu <- link( m1 )
+
+# get the mu value 
+dat_sp$mu <- apply(mu, 2, mean)
+
+# get the PI value
+dat_sp$PI_low <- apply(mu, 2, min)
+dat_sp$PI_high <- apply(mu, 2, max)
+
+x <- bind_cols(dat_sp)
+y <- 
+  x %>%
+  group_by(depth) %>%
+  summarise(mu = first(mu), 
+            PI_low = first(PI_low),
+            PI_high = first(PI_high))
+
+ggplot() +
+  geom_jitter(data = x,
+              mapping = aes(x = depth, y = growth),
+              alpha = 0.25, shape = 16, size = 2, width = 0.5) +
+  geom_point(data = y,
+                mapping = aes(x = depth, y = mu), colour = "red") +
+  geom_line(data = y,
+             mapping = aes(x = depth, y = mu), colour = "red") +
+  geom_errorbar(data = y,
+                mapping = aes(x = depth, ymin = PI_low, ymax = PI_high),
+                width = 0, colour = "red") +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  theme_meta()
+
+
 # model the growth rates as a function of depth and species
-gr_list <- list(depth = gr_dat$depth_treatment,
-                species = as.integer(as.factor(gr_dat$binomial_code)),
-                growth = gr_dat$dry_weight_g_daily_change)
+dat_sp <- gr_dat[gr_dat$binomial_code == "fu_se", ]
+gr_list <- list(depth = dat_sp$depth_treatment,
+                depth2 = dat_sp$depth_treatment^2,
+                growth = dat_sp$dry_weight_g_daily_change)
 
 # fit a model to these data
 m1 <- 
   ulam(
     
     alist(growth ~ dnorm(mu, sigma),
-          mu <- a[species] + b1[species]*depth,
+          mu <- a + b1*depth,
           
-          a[species] ~ dnorm(0, 2),
-          b1[species] ~ dnorm(0, 2),
+          a ~ dnorm(0, 2),
+          b1 ~ dnorm(0, 2),
           sigma ~ dexp(1) ),
        
        data = gr_list, chains = 4)
@@ -68,6 +137,7 @@ PI <- apply(pred.m1, 2, PI)
 
 # check fit to sample
 plot(gr_list$growth, mu)
+abline(a = 0, b = 1, col = "red")
 
 # add the predictions to the list
 df <- bind_cols(gr_list)
@@ -77,7 +147,6 @@ df$growth_pred <- mu
 ggplot(data = df,
        mapping = aes(x = growth, y = growth_pred, colour = depth)) +
   geom_point() +
-  facet_wrap(~species, scales = "free") +
   geom_abline(intercept = 0, slope = 1) +
   theme_classic()
 
