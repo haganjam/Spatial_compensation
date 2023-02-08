@@ -32,7 +32,8 @@ gr_dat <-
 # compare the growth rates overall among species
 ggplot(data = gr_dat,
        mapping = aes(x = binomial_code, dry_weight_g_daily_change)) +
-  geom_boxplot()
+  geom_boxplot() +
+  theme_classic()
 
 # relationship between growth and depth among species
 ggplot(data = gr_dat,
@@ -42,36 +43,84 @@ ggplot(data = gr_dat,
   facet_wrap(~binomial_code) +
   theme_classic()
 
-# let's use basis splines
+# create a list with the relevant data
 
 # subset fucus vesiculosus
-dat_sp <- gr_dat[gr_dat$binomial_code == "fu_ve", ]
-dat_sp <- list(depth = dat_sp$depth_treatment,
-               growth = dat_sp$dry_weight_g_daily_change)
+dat_sp <- list(species = as.integer(factor(gr_dat$binomial_code)),
+               depth = as.integer(factor(gr_dat$depth_treatment)),
+               growth = gr_dat$dry_weight_g_daily_change)
 
-# choose the number of knots
-num_knots <- 1
-
-# set the position of the knots in proportion to the number of observations
-knot_list <- seq(min(dat_sp$depth), max(dat_sp$depth), length.out=num_knots)
-
-# construct basis splines of degree 3 (i.e. cubic splines)
-library(splines)
-B <- bs(dat_sp$depth,
-        knots=knot_list[-c(1, num_knots)] ,
-        degree = 1 , intercept=TRUE )
-
-# let's fit this model using ulam()
-m1 <- quap(
+# fit a model with partial pooling by across depths within each species
+m1 <- ulam(
+  
   alist(
-    G ~ dnorm( mu , sigma ) ,
-    mu <- a + B %*% w ,
-    a ~ dnorm(0,10),
-    w ~ dnorm(0,10),
+    
+    growth ~ dnorm(mu, sigma),
+    
+    mu <- alpha[species, depth],
+    
+    # adaptive priors
+    vector[4]:alpha[species] ~ multi_normal(0, Rho_species, sigma_species),
+    
+    # fixed priors
+    sigma_species ~ dexp(1),
+    Rho_species ~ dlkjcorr(4),
     sigma ~ dexp(1)
-  ), 
-  data = list( G = dat_sp$growth , B = B ),
-  start = list( w=rep( 0 , ncol(B) ) ))
+    
+  ) , data = dat_sp, chains = 4 , cores = 4 )
+
+# check the precis output and the traceplots
+
+# note the diagonals in the correlation matrix should be NaN because they are constants
+precis(m1, depth = 3)
+traceplot(m1)
+
+# check the fit of the model to the data
+
+# extract the predictions from this model
+mu <- link(m1)
+
+# get the mu value 
+dat_sp$mu <- apply(mu, 2, mean)
+
+# get the PI value
+dat_sp$PI_low <- apply(mu, 2, min)
+dat_sp$PI_high <- apply(mu, 2, max)
+
+x <- bind_cols(dat_sp)
+y <- 
+  x %>%
+  group_by(species, depth) %>%
+  summarise(mu = first(mu), 
+            PI_low = first(PI_low),
+            PI_high = first(PI_high))
+
+ggplot() +
+  geom_jitter(data = x,
+              mapping = aes(x = depth, y = growth),
+              alpha = 0.25, shape = 16, size = 2, width = 0.1) +
+  geom_point(data = y,
+             mapping = aes(x = depth, y = mu), colour = "red") +
+  geom_line(data = y,
+            mapping = aes(x = depth, y = mu), colour = "red") +
+  geom_errorbar(data = y,
+                mapping = aes(x = depth, ymin = PI_low, ymax = PI_high),
+                width = 0, colour = "red") +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  facet_wrap(~species, scales = "free") +
+  theme_meta()
+
+
+
+m1 <- 
+  ulam(
+    alist(growth ~ dnorm(mu, sigma),
+          
+          mu <- a[depth],
+          a[depth] ~ dnorm(0, 2),
+          sigma ~ dexp(1)),
+    
+    data = dat_sp, chains = 4)
 
 # check the model fit
 mu <- link( m1 )
@@ -94,7 +143,7 @@ y <-
 ggplot() +
   geom_jitter(data = x,
               mapping = aes(x = depth, y = growth),
-              alpha = 0.25, shape = 16, size = 2, width = 0.5) +
+              alpha = 0.25, shape = 16, size = 2, width = 0.1) +
   geom_point(data = y,
                 mapping = aes(x = depth, y = mu), colour = "red") +
   geom_line(data = y,
