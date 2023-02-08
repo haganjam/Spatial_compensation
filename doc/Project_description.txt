@@ -1,0 +1,25 @@
+# Description of the project
+
+First, we use our standing stock data from our transects on Langholmen to get a distribution of biomass for the four fucoid species.
+
+We then use the transplant experiment to model the individual-level growth rates of the species at all four depth zones on Longholmen.
+
+- Our standard deviation is from all the uncertainty in the model because we simulate growth rates but also due to different starting communities (as per Winfree et al. 2018).
+
+Next, we show the Winfree et al. (2018) pattern in our data which looks relatively clear actually.
+
+- Right now, this is based on 50% level of average functioning across sites but we could technically specify any level of average functioning.
+
+One important point about the Winfree et al. (2018) method, is that if all species in the species pool still do not reach the 50% level of average functioning, that is still counted as a "success" somehow.
+
+- This is important because that means that not all the sites that they show are actually reaching the 50% level. This also makes sense given that not all sites can possibly reach 50% average function unless the distribution is relatively weird (I think).
+
+Next, we model what would happen if we lost each species individually.
+
+So, if we lose, for example, F. serratus, we then replace some percentage (% compensation) of that lost biomass with some other species in that zone.
+
+We then calculate productivity using the growth rates from the transplant experiments and see how much % compensation is necesarry to maintain the same level of functioning across the landscape in the intact communities.
+
+The advantage of this approach in comparison to Winfree et al. (2018) is that we can deduce which species would be irreplaceable because there are some species that would not be able to be compensated for.
+
+Suggest some avenues by which this could be studied. For example, are trait filling patterns useful for seeing which species might be essential.
