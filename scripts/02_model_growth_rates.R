@@ -111,93 +111,10 @@ ggplot() +
   theme_meta()
 
 
-
-m1 <- 
-  ulam(
-    alist(growth ~ dnorm(mu, sigma),
-          
-          mu <- a[depth],
-          a[depth] ~ dnorm(0, 2),
-          sigma ~ dexp(1)),
-    
-    data = dat_sp, chains = 4)
-
-# check the model fit
-mu <- link( m1 )
-
-# get the mu value 
-dat_sp$mu <- apply(mu, 2, mean)
-
-# get the PI value
-dat_sp$PI_low <- apply(mu, 2, min)
-dat_sp$PI_high <- apply(mu, 2, max)
-
-x <- bind_cols(dat_sp)
-y <- 
-  x %>%
-  group_by(depth) %>%
-  summarise(mu = first(mu), 
-            PI_low = first(PI_low),
-            PI_high = first(PI_high))
-
-ggplot() +
-  geom_jitter(data = x,
-              mapping = aes(x = depth, y = growth),
-              alpha = 0.25, shape = 16, size = 2, width = 0.1) +
-  geom_point(data = y,
-                mapping = aes(x = depth, y = mu), colour = "red") +
-  geom_line(data = y,
-             mapping = aes(x = depth, y = mu), colour = "red") +
-  geom_errorbar(data = y,
-                mapping = aes(x = depth, ymin = PI_low, ymax = PI_high),
-                width = 0, colour = "red") +
-  geom_hline(yintercept = 0, linetype = "dashed") +
-  theme_meta()
+# we just treat the depth zones as discrete variables instead of predicting to this new data
 
 
-# model the growth rates as a function of depth and species
-dat_sp <- gr_dat[gr_dat$binomial_code == "fu_se", ]
-gr_list <- list(depth = dat_sp$depth_treatment,
-                depth2 = dat_sp$depth_treatment^2,
-                growth = dat_sp$dry_weight_g_daily_change)
 
-# fit a model to these data
-m1 <- 
-  ulam(
-    
-    alist(growth ~ dnorm(mu, sigma),
-          mu <- a + b1*depth,
-          
-          a ~ dnorm(0, 2),
-          b1 ~ dnorm(0, 2),
-          sigma ~ dexp(1) ),
-       
-       data = gr_list, chains = 4)
-precis(m1, depth = 2)
-traceplot(m1)
-dev.off()
-
-# check the predictions
-pred.m1 <- link(fit = m1)
-
-# calculate the mean and percentile interval
-mu <- apply(pred.m1, 2, mean)
-PI <- apply(pred.m1, 2, PI)
-
-# check fit to sample
-plot(gr_list$growth, mu)
-abline(a = 0, b = 1, col = "red")
-
-# add the predictions to the list
-df <- bind_cols(gr_list)
-df$growth_pred <- mu
-
-# check relationship within species
-ggplot(data = df,
-       mapping = aes(x = growth, y = growth_pred, colour = depth)) +
-  geom_point() +
-  geom_abline(intercept = 0, slope = 1) +
-  theme_classic()
 
 # simulate a posterior distribution for each species at each transect depth
 df.pred <- expand.grid(depth = c(-44, -32, -20, -8),
