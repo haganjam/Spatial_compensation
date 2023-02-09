@@ -134,6 +134,17 @@ gr_dat$depth <- as.integer(as.factor(gr_dat$depth_treatment))
 gr_dat$growth <- (gr_dat$dry_weight_g_daily_change/100)
 gr_dat$species <- factor(gr_dat$binomial_code, levels = c("fu_se", "as_no", "fu_ve", "fu_sp"))
 
+# modify the depth factors
+
+# df.pred
+df.pred.plot <- df.pred
+df.pred.plot$depth <- factor(df.pred.plot$depth, levels = c("4", "3", "2", "1"))
+levels(df.pred.plot$depth) <- c("-2 to -14", "-14 to -26", "-26 to -38", "-38 to -50")
+
+# raw data gr_dat
+gr_dat$depth <- factor(gr_dat$depth, levels = c("4", "3", "2", "1"))
+levels(gr_dat$depth) <- c("-2 to -14", "-14 to -26", "-26 to -38", "-38 to -50")
+
 p1 <- 
   ggplot() +
   geom_point(data = gr_dat,
@@ -141,18 +152,18 @@ p1 <-
              shape = 1, alpha = 0.3, size = 2, 
              position = position_jitterdodge(jitter.width = 0.2, dodge.width = 0.25)) +
   geom_hline(yintercept = 0, linetype = "dashed") +
-  geom_point(data = df.pred,
+  geom_point(data = df.pred.plot,
              mapping = aes(x = depth, y = mu, colour = species),
              position = position_dodge(0.25), size = 2) +
-  geom_errorbar(data = df.pred,
+  geom_errorbar(data = df.pred.plot,
                 mapping = aes(x = depth, ymin = PI_low, ymax = PI_high, colour = species),
                 width = 0,
                 position = position_dodge(0.25)) +
-  geom_line(data = df.pred,
-            mapping = aes(x = depth, y=mu, colour = species),
+  geom_line(data = df.pred.plot,
+            mapping = aes(x = as.integer(depth), y=mu, colour = species),
             position = position_dodge(0.25)) +
   scale_colour_viridis_d(option = "A", end = 0.9) +
-  xlab("Depth zone") +
+  xlab("Depth range (cm)") +
   ylab(expression("Dry biomass change"~(g~g^{-1}~day^{-1}) )) +
   theme_meta() +
   theme(legend.position = "none")
