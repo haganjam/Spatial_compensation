@@ -6,23 +6,17 @@ library(dplyr)
 library(readr)
 library(tidyr)
 library(ggplot2)
-
-# set the working directory
-setwd("C:/Users/james/OneDrive/PhD_Gothenburg/Chapter_2_Fucus_landscape/compensation_analysis")
-getwd()
+library(here)
 
 # load the plotting theme
 source("scripts/function_plotting_theme.R")
 
-# set the number of days to simulate growth over
-n_days <- 1
-
 # load the summarised transect data
-tra_dat <- read_csv(file = "data/transect_comp.csv")
+tra_dat <- readRDS(here("data/transect_ssdb.rds") )
 head(tra_dat)
 
 # load the growth rate data
-grow_dat_list <- readRDS(file = "data/growth_rate_data.rds")
+grow_dat_list <- readRDS(file = here("data/growth_rate_data.rds"))
 
 # set the number of species
 sp_vec <- c("fu_se", "as_no", "fu_ve", "fu_sp")
@@ -46,8 +40,8 @@ for(i in 1:length(sp_vec)) {
           df.tra <- tra_dat
           
           # calculate the intact community productivity using the growth rate data
-          prodx <- mapply(function(x, y){x*y*n_days}, df.tra[,-1], grow_dat[,-1])
-          prodx <- cbind(data.frame(depth_zone = as.character(1:4)), as.data.frame(prodx))
+          prodx <- mapply(function(x, y){x*y}, df.tra[,-1], grow_dat[,-1])
+          prodx <- cbind(data.frame(depth = as.character(1:4)), as.data.frame(prodx))
           
           # get the compensation level of standing biomass
           comp.x <- df.tra[[sp_ext]]*comp
@@ -61,7 +55,7 @@ for(i in 1:length(sp_vec)) {
             
             # get the different names that have positive growth rates in that zone
             x.grow <- grow_dat[,names(grow_dat) != sp_ext]
-            x.grow <- x.grow[x.grow$depth_zone == dz,-1]
+            x.grow <- x.grow[x.grow$depth == dz,-1]
             sp.grow <- names(x.grow)[x.grow > 0]
             
             # get the names of species with positive standing biomass in an adjacent zone
@@ -71,7 +65,7 @@ for(i in 1:length(sp_vec)) {
             zones <- zones[(zones > 0) & (zones < 5)]
             
             x.ssb <- df.tra[, names(df.tra) != sp_ext]
-            x.ssb <- x.ssb[x.ssb$depth_zone %in% zones,-1]
+            x.ssb <- x.ssb[x.ssb$depth %in% zones,-1]
             sp.ssb <- names(x.ssb)[apply(x.ssb, 2, function(x) any(x >0))]
             
             # get intersecting species in this way
@@ -91,15 +85,15 @@ for(i in 1:length(sp_vec)) {
           
           # calculate the productivity using the growth rate data
           # convert biomass to productivity units
-          prodx2 <- mapply(function(x, y){x*y*n_days}, df.tra[,-1], grow_dat[,-1])
-          prodx2 <- cbind(data.frame(depth_zone = as.character(1:4)), as.data.frame(prodx2))
+          prodx2 <- mapply(function(x, y){x*y}, df.tra[,-1], grow_dat[,-1])
+          prodx2 <- cbind(data.frame(depth = as.character(1:4)), as.data.frame(prodx2))
           
           # do we reach 50% of the original biomass at all sites?
           thresh_50 <- rowSums(prodx2[,-1]) > 0.50*rowSums(prodx[,-1])
           perc_diff <- ((rowSums(prodx2[,-1]) - rowSums(prodx[,-1]))/rowSums(prodx[,-1]))*100
           
           # wrap this into a useful data.frame
-          df.out <- data.frame(depth_zone = as.character(1:4),
+          df.out <- data.frame(depth = as.character(1:4),
                                prod_init = rowSums(prodx[,-1]),
                                prod_comp = rowSums(prodx2[,-1]))
           
@@ -131,10 +125,10 @@ head(sp_out)
 # reorder the columns
 sp_out <- 
   sp_out %>%
-  select(species_ext, comp_level, sample_gr, depth_zone, 
+  select(species_ext, comp_level, sample_gr, depth, 
          prod_init, prod_comp)
 
 # save the data as a .rds file
-saveRDS(sp_out, file = "data/species_extinction_analysis.rds")
+saveRDS(sp_out, file = here("data/species_extinction_analysis.rds"))
 
 ### END

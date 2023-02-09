@@ -365,7 +365,8 @@ tra_a <-
 tra_a <- 
   tra_a %>%
   mutate(depth_zone = as.character(depth_zone)) %>%
-  select(depth_zone, fu_se, as_no, fu_ve, fu_sp)
+  select(depth_zone, fu_se, as_no, fu_ve, fu_sp) %>%
+  rename(depth = depth_zone)
 
 # write this into a .rdsfile
 saveRDS(object = tra_a, file = "data/transect_ssdb.rds")
