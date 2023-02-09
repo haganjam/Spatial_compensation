@@ -40,8 +40,12 @@ prod <-
             PI_low = quantile(prod, 0.05),
             PI_high = quantile(prod, 0.95))
 
-# change factor levels
+# change factor levels of species
 prod$species <- factor(prod$species, levels = c("fu_se", "as_no", "fu_ve", "fu_sp"))
+
+# change the factor levels of depth
+prod$depth <- factor(prod$depth_zone, levels = c("4", "3", "2", "1"))
+levels(prod$depth) <- c("-2 to -14", "-14 to -26", "-26 to -38", "-38 to -50")
 
 prod_sum <- 
   bind_rows(prod_raw, .id = "sample_gr") %>%
@@ -51,24 +55,28 @@ prod_sum <-
             PI_low = quantile(total_prod, 0.05),
             PI_high = quantile(total_prod, 0.95))
 
+# change the factor levels of depth
+prod_sum$depth <- factor(prod_sum$depth_zone, levels = c("4", "3", "2", "1"))
+levels(prod_sum$depth) <- c("-2 to -14", "-14 to -26", "-26 to -38", "-38 to -50")
+
 p1 <- 
   ggplot() +
   geom_hline(yintercept = 0, linetype = "dashed") +
   geom_errorbar(data = prod, 
-                mapping = aes(x = depth_zone, ymin = PI_low, ymax = PI_high, colour = species),
+                mapping = aes(x = depth, ymin = PI_low, ymax = PI_high, colour = species),
                 width = 0, position = position_dodge(0.5), alpha = 0.4) +
   geom_point(data = prod,
-             mapping = aes(x = depth_zone, y = prod_m, colour = species), 
+             mapping = aes(x = depth, y = prod_m, colour = species), 
              size = 2, position = position_dodge(0.5), alpha = 0.7,
              shape = 16) +
   geom_point(data = prod_sum,
-             mapping = aes(x = depth_zone, y = total_prod_m), 
+             mapping = aes(x = depth, y = total_prod_m), 
              size = 3.5, colour = "red", shape = 18) +
   geom_errorbar(data = prod_sum, 
-                mapping = aes(x = depth_zone, ymin = PI_low, ymax = PI_high),
+                mapping = aes(x = depth, ymin = PI_low, ymax = PI_high),
                 width = 0, colour = "red") +
   scale_colour_viridis_d(option = "A", end = 0.9) +
-  xlab("Depth zone") +
+  xlab("Depth range (cm)") +
   ylab(expression("Dry biomass prod."~(g~day^{-1}) )) +
   theme_meta() +
   theme(legend.position = "none")
