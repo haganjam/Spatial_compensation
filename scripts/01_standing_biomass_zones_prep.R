@@ -217,10 +217,13 @@ ts1 <-
   group_by(species, model) %>%
   summarise(terms = paste(term, collapse = " + "), 
             N = first(nobs),
-            r2 = first(r.squared), 
-            AIC = first(AIC), .groups = "drop") %>%
+            r2 = round(first(r.squared), 2), 
+            AIC = round(first(AIC), 1), .groups = "drop") %>%
   select(-model) %>%
   arrange(species, AIC)
+
+# export this table as a .csv file
+write_csv(x = ts1, file = here("data/tableS1.csv"))
 
 # which models are best for each species?
 ts1 %>%
@@ -382,14 +385,18 @@ tra_a_plot <-
 tra_a_plot$species <- factor(tra_a_plot$species,
                              levels = c("F. serratus", "A. nodosum", "F. vesiculosus", "F. spiralis"))
 
+# modify the depth zone factor
+tra_a_plot$depth <- factor(tra_a_plot$depth_zone, levels = c("4", "3", "2", "1"))
+levels(tra_a_plot$depth) <- c("-2 to -14", "-14 to -26", "-26 to -38", "-38 to -50")
+
 p2 <- 
   ggplot(data = tra_a_plot,
-       mapping = aes(x = depth_zone, y = biomass, fill = species)) +
+       mapping = aes(x = depth, y = biomass, fill = species)) +
   geom_bar(stat = "identity", position = "dodge", width = 0.8,
            alpha = 0.75, colour = "black") +
   scale_fill_viridis_d(option = "A", end = 0.9) +
   ylab("Standing dry biomass (g)") +
-  xlab("Depth zone") +
+  xlab("Depth range (cm)") +
   labs(fill = "Species") +
   theme_meta()
 plot(p2)
