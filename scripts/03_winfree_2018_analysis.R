@@ -6,20 +6,14 @@ library(dplyr)
 library(readr)
 library(tidyr)
 library(ggplot2)
-
-# set the working directory
-setwd("C:/Users/james/OneDrive/PhD_Gothenburg/Chapter_2_Fucus_landscape/compensation_analysis")
-getwd()
+library(here)
 
 # load the winfree functions
 source("scripts/winfree_2018_functions.R")
 source("scripts/function_plotting_theme.R")
 
-# set the number of days to simulate growth over
-n_days <- 1
-
 # load the summarised transect data
-tra_dat <- read_csv(file = "data/transect_comp.csv")
+tra_dat <- readRDS(file = "data/transect_ssdb.rds")
 head(tra_dat)
 
 # load the growth rate data
@@ -30,7 +24,7 @@ prod_raw <-
   lapply(grow_dat_list, function(grow_dat) {
   
   # convert biomass to productivity units
-  prodx <- mapply(function(x, y){x*y*n_days}, tra_dat[,-1], grow_dat[,-1])
+  prodx <- mapply(function(x, y){x*y}, tra_dat[,-1], grow_dat[,-1])
   prodx <- cbind(data.frame(depth_zone = as.character(1:4)), as.data.frame(prodx))
   return(prodx) }
   )
@@ -57,7 +51,7 @@ prod_sum <-
             PI_low = quantile(total_prod, 0.05),
             PI_high = quantile(total_prod, 0.95))
 
-fig_1c <- 
+p1 <- 
   ggplot() +
   geom_hline(yintercept = 0, linetype = "dashed") +
   geom_errorbar(data = prod, 
@@ -65,11 +59,11 @@ fig_1c <-
                 width = 0, position = position_dodge(0.5), alpha = 0.4) +
   geom_point(data = prod,
              mapping = aes(x = depth_zone, y = prod_m, colour = species), 
-             size = 1.8, position = position_dodge(0.5), alpha = 0.55,
+             size = 2, position = position_dodge(0.5), alpha = 0.7,
              shape = 16) +
   geom_point(data = prod_sum,
              mapping = aes(x = depth_zone, y = total_prod_m), 
-             size = 3, colour = "red", shape = 18) +
+             size = 3.5, colour = "red", shape = 18) +
   geom_errorbar(data = prod_sum, 
                 mapping = aes(x = depth_zone, ymin = PI_low, ymax = PI_high),
                 width = 0, colour = "red") +
@@ -78,13 +72,15 @@ fig_1c <-
   ylab(expression("Dry biomass prod."~(g~day^{-1}) )) +
   theme_meta() +
   theme(legend.position = "none")
-plot(fig_1c)
+plot(p1)
 
-saveRDS(object = fig_1c, file = "figures/Fig_1c.rds")
+saveRDS(object = p1, file = "figures/fig1c.rds")
 
 
-# for each sample of growth rates, calculate the productivity
-# then perform the Winfree et al. (2018) approach
+# Winfree et al. (2018) approach"
+
+# 1. for each sample of growth rates, calculate the productivity
+# 2. use the Winfree functions to calculate number of species required
 
 sp_pool_lev <- 
   
@@ -95,13 +91,11 @@ sp_pool_lev <-
     lapply(grow_dat_list, function(grow_dat) {
       
       # convert biomass to productivity units
-      prodx <- mapply(function(x, y){x*y*n_days}, tra_dat[,-1], grow_dat[,-1])
+      prodx <- mapply(function(x, y){x*y}, tra_dat[,-1], grow_dat[,-1])
       prodx <- cbind(data.frame(depth_zone = as.character(1:4)), as.data.frame(prodx))
-      print(prodx)
       
       # calculate mean productivity
       mean_prod <- mean( rowSums(prodx[,-1]) )
-      print(mean_prod)
       
       # generate different combinations of site numbers
       perms <- gtools::permutations(n = 4, r = 4, v = prodx$depth_zone)
@@ -186,10 +180,6 @@ ggplot(data = sp_pool_lev,
   geom_histogram() +
   facet_wrap(~n_sites, scales = "free")
 
-sp_pool_df %>%
-  group_by(n_sites) %>%
-  summarise(range = range(richness_required))
-
 # summarise into a mean and percentile interval
 sp_pool_lev <- 
   sp_pool_lev %>%
@@ -213,10 +203,10 @@ p1 <-
                               colour = Thresh.),
                 width = 0, show.legend = FALSE, position = position_dodge(0.25)) +
   scale_colour_viridis_d(option = "E", end = 0.9) +
-  guides(colour = guide_legend(override.aes = list(shape = 16, size = 4.5))) +
+  guides(colour = guide_legend(override.aes = list(shape = 16, size = 4))) +
   ylab("Number of species required") +
   xlab("Number of depth zones") +
-  scale_x_continuous(limits = c(0.8, 4.5)) +
+  scale_x_continuous(limits = c(0.8, 4.2)) +
   theme_meta() +
   theme(legend.key = element_rect(fill = NA))
 plot(p1)

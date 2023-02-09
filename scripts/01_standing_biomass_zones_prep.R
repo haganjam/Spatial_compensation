@@ -365,7 +365,7 @@ tra_a <-
   select(depth_zone, fu_se, as_no, fu_ve, fu_sp)
 
 # write this into a .rdsfile
-saveRDS(object = tra_a, file = "data/transect_ssdb.csv")
+saveRDS(object = tra_a, file = "data/transect_ssdb.rds")
 
 # plot a figure of the depth distribution
 tra_a_plot <- 
