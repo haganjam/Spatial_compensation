@@ -8,16 +8,13 @@ library(tidyr)
 library(ggplot2)
 library(ggbeeswarm)
 library(ggpubr)
-
-# set the working directory
-setwd("C:/Users/james/OneDrive/PhD_Gothenburg/Chapter_2_Fucus_landscape/compensation_analysis")
-getwd()
+library(here)
 
 # load the plotting theme
-source("scripts/function_plotting_theme.R")
+source(here("scripts/function_plotting_theme.R"))
 
 # load the rds data
-sp_dat <- readRDS(file = "data/species_extinction_analysis.rds")
+sp_dat <- readRDS(file = here("data/species_extinction_analysis.rds"))
 head(sp_dat)
 
 # convert to a tibble
@@ -29,7 +26,7 @@ sp_dat <-
   sp_dat %>%
   mutate(thresh_50 = (prod_comp >= 0.50*prod_init),
          prod_change = ((prod_comp - prod_init)/prod_init)*100  ) %>%
-  mutate(depth_zone = as.character(depth_zone),
+  mutate(depth_zone = as.character(depth),
          comp_level = as.character(comp_level))
 
 # remove the most extreme values
