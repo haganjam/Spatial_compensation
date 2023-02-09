@@ -88,10 +88,6 @@ for(i in 1:length(sp_vec)) {
           prodx2 <- mapply(function(x, y){x*y}, df.tra[,-1], grow_dat[,-1])
           prodx2 <- cbind(data.frame(depth = as.character(1:4)), as.data.frame(prodx2))
           
-          # do we reach 50% of the original biomass at all sites?
-          thresh_50 <- rowSums(prodx2[,-1]) > 0.50*rowSums(prodx[,-1])
-          perc_diff <- ((rowSums(prodx2[,-1]) - rowSums(prodx[,-1]))/rowSums(prodx[,-1]))*100
-          
           # wrap this into a useful data.frame
           df.out <- data.frame(depth = as.character(1:4),
                                prod_init = rowSums(prodx[,-1]),
