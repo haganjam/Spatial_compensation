@@ -20,8 +20,7 @@ head(sp_dat)
 # convert to a tibble
 sp_dat <- tibble(sp_dat)
 
-# calculate the number how many zones maintain 50% of the productivity
-# calculate the percent deviation from the initial productivity
+# calculate the change in productivity
 sp_dat <- 
   sp_dat %>%
   mutate(prod_change = (prod_comp - prod_init)) %>%
@@ -41,12 +40,6 @@ sp_dat %>%
 sp_dat$depth <- factor(sp_dat$depth, levels = c("4", "3", "2", "1"))
 levels(sp_dat$depth) <- c("-2 to -14", "-14 to -26", "-26 to -38", "-38 to -50")
 
-# remove the most extreme values
-sp_dat <- 
-  sp_dat %>%
-  filter(prod_change_perc > quantile(prod_change_perc, 0.01),
-         prod_change_perc < quantile(prod_change_perc, 0.99))
-
 # check the summary data
 summary(sp_dat)
 
@@ -63,11 +56,12 @@ summary(sp_sub)
 sp_sum <- 
   sp_dat %>%
   group_by(species_ext, depth, comp_level) %>%
-  summarise(mu = mean(prod_change_perc),
-            PI_low = quantile(prod_change_perc, 0.05),
-            PI_high = quantile(prod_change_perc, 0.95),
+  summarise(mu = mean(prod_change),
+            PI_low = quantile(prod_change, 0.05),
+            PI_high = quantile(prod_change, 0.95),
             n = n(), .groups = "drop") %>%
   filter(comp_level %in% c(0.1, 0.5, 0.9))
+print(sp_sum)
 
 # plot these four graphs individually for each species
 sp_code <- c("fu_sp", "fu_ve", "as_no", "fu_se")
@@ -85,8 +79,6 @@ for(i in 1:length(sp_code)) {
   px <- 
     ggplot() +
     geom_hline(yintercept = 0, linetype = "dashed") +
-    geom_hline(yintercept = 50, linetype = "dashed", colour = "red") +
-    geom_hline(yintercept = -50, linetype = "dashed", colour = "red") +
     geom_errorbar(data = sp_sum %>% filter(species_ext == sp_code[i]),
                   mapping = aes(x = depth, colour = comp_level,
                                 ymin = PI_low, ymax = PI_high),
@@ -94,7 +86,7 @@ for(i in 1:length(sp_code)) {
                   position = position_dodge(0.8),
                   show.legend=FALSE) +
     geom_quasirandom(data = sp_sub %>% filter(species_ext == sp_code[i]),
-                     mapping = aes(x = depth, y = prod_change_perc, colour = comp_level),
+                     mapping = aes(x = depth, y = prod_change, colour = comp_level),
                      dodge.width = 0.8, alpha = 0.2, shape = 1, size = 2.25,
                      show.legend = FALSE) +
     geom_point(data = sp_sum %>% filter(species_ext == sp_code[i]),
@@ -106,7 +98,7 @@ for(i in 1:length(sp_code)) {
     ggtitle(label = sp_names[i]) +
     labs(colour = "Compensation (%)") +
     guides(colour = guide_legend(override.aes = list(shape = 18, size = 6))) +
-    scale_y_continuous(limits = c(-370, 370)) +
+    scale_y_continuous(limits = c(-10, 10)) +
     theme(legend.key = element_rect(fill = NA),
           legend.position = "top") +
     theme_meta() +
