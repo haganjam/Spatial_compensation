@@ -42,6 +42,17 @@ levels(sp_dat$depth) <- c("[-2 to -14]", "[-14 to -26]", "[-26 to -38]", "[-38 t
 # check the summary data
 summary(sp_dat)
 
+# calculate summary variables for the percentage change
+sp_dat %>%
+  group_by(species_ext, depth, comp_level) %>%
+  summarise(mu = mean(prod_change_perc),
+            PI_low = quantile(prod_change_perc, 0.05),
+            PI_high = quantile(prod_change_perc, 0.95),
+            n = n(), .groups = "drop") %>%
+  filter(comp_level %in% c(0.1, 0.5, 0.9)) %>%
+  View()
+
+
 # sample 100 points randomly from each category
 sp_sub <- 
   sp_dat %>%
@@ -72,12 +83,20 @@ xlabs <- list(NULL, NULL, "Depth range (cm)", "Depth range (cm)")
 x.text <- c("white", "white", "black", "black")
 x.text.size <- c(1, 1, 9, 9)
 
+# set the ylims for the different species
+ylims <- list(c(-3, 3),
+              c(-5, 3),
+              c(-3, 3),
+              c(-8.5, 8.5))
+
 plots <- vector("list", length = length(sp_code))
 for(i in 1:length(sp_code)) {
   
   px <- 
     ggplot() +
     geom_hline(yintercept = 0, linetype = "dashed") +
+    geom_hline(yintercept = 2.5, linetype = "dashed", colour = "red", alpha = 0.5) +
+    geom_hline(yintercept = -2.5, linetype = "dashed", colour = "red", alpha = 0.5) +
     geom_errorbar(data = sp_sum %>% filter(species_ext == sp_code[i]),
                   mapping = aes(x = depth, colour = comp_level,
                                 ymin = PI_low, ymax = PI_high),
@@ -97,7 +116,7 @@ for(i in 1:length(sp_code)) {
     ggtitle(label = sp_names[i]) +
     labs(colour = "Compensation (%)") +
     guides(colour = guide_legend(override.aes = list(shape = 18, size = 6))) +
-    scale_y_continuous(limits = c(-10, 10)) +
+    scale_y_continuous(limits = ylims[[i]] ) +
     theme(legend.key = element_rect(fill = NA),
           legend.position = "top") +
     theme_meta() +
