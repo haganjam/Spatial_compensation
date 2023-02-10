@@ -35,7 +35,6 @@ summary(sp_dat)
 sp_dat %>%
   filter(prod_change_perc > 10000)
 
-# modify the depth factor
 # change the factor levels of depth
 sp_dat$depth <- factor(sp_dat$depth, levels = c("4", "3", "2", "1"))
 levels(sp_dat$depth) <- c("-2 to -14", "-14 to -26", "-26 to -38", "-38 to -50")
