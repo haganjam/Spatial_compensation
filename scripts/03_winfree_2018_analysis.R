@@ -45,7 +45,7 @@ prod$species <- factor(prod$species, levels = c("fu_se", "as_no", "fu_ve", "fu_s
 
 # change the factor levels of depth
 prod$depth <- factor(prod$depth_zone, levels = c("4", "3", "2", "1"))
-levels(prod$depth) <- c("-2 to -14", "-14 to -26", "-26 to -38", "-38 to -50")
+levels(prod$depth) <- c("[-2 to -14]", "[-14 to -26]", "[-26 to -38]", "[-38 to -50]")
 
 prod_sum <- 
   bind_rows(prod_raw, .id = "sample_gr") %>%
@@ -57,7 +57,7 @@ prod_sum <-
 
 # change the factor levels of depth
 prod_sum$depth <- factor(prod_sum$depth_zone, levels = c("4", "3", "2", "1"))
-levels(prod_sum$depth) <- c("-2 to -14", "-14 to -26", "-26 to -38", "-38 to -50")
+levels(prod_sum$depth) <- c("[-2 to -14]", "[-14 to -26]", "[-26 to -38]", "[-38 to -50]")
 
 p1 <- 
   ggplot() +
@@ -79,7 +79,8 @@ p1 <-
   xlab("Depth range (cm)") +
   ylab(expression("Dry biomass prod."~(g~day^{-1}) )) +
   theme_meta() +
-  theme(legend.position = "none")
+  theme(legend.position = "none",
+        axis.text.x = element_text(size = 9))
 plot(p1)
 
 saveRDS(object = p1, file = "figures/fig1c.rds")

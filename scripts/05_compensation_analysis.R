@@ -37,7 +37,7 @@ sp_dat %>%
 
 # change the factor levels of depth
 sp_dat$depth <- factor(sp_dat$depth, levels = c("4", "3", "2", "1"))
-levels(sp_dat$depth) <- c("-2 to -14", "-14 to -26", "-26 to -38", "-38 to -50")
+levels(sp_dat$depth) <- c("[-2 to -14]", "[-14 to -26]", "[-26 to -38]", "[-38 to -50]")
 
 # check the summary data
 summary(sp_dat)
@@ -70,7 +70,7 @@ sp_names <- c("F. spiralis Extinct", "F. vesiculosus Extinct", "A. nodosum Extin
 ylabs <- c(expression("Dry biomass prod."~(g~day^{-1}) ), "", expression("Dry biomass prod."~(g~day^{-1}) ), "")
 xlabs <- list(NULL, NULL, "Depth range (cm)", "Depth range (cm)")
 x.text <- c("white", "white", "black", "black")
-x.text.size <- c(1, 1, 10, 10)
+x.text.size <- c(1, 1, 9, 9)
 
 plots <- vector("list", length = length(sp_code))
 for(i in 1:length(sp_code)) {
@@ -122,6 +122,6 @@ p1 <-
 plot(p1)
 
 ggsave(filename = here("figures/fig4.png"), p1, dpi = 400,
-       units = "cm", width = 18, height = 17)
+       units = "cm", width = 20, height = 18)
 
 ### END

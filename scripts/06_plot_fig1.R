@@ -6,7 +6,7 @@ library(dplyr)
 library(readr)
 library(tidyr)
 library(ggplot2)
-library(ggpubr)
+library(cowplot)
 library(here)
 
 # load the plotting theme
@@ -31,13 +31,12 @@ p3 <-
   theme(legend.position = "none")
 
 # ggarrange the plots to keep the common legend
-p123 <- ggarrange(p1, p2, p3, common.legend = FALSE,
-                 labels = c("a", "b", "c"), font.label = list(face = "plain", size = 11),
-                 ncol = 2, nrow = 2,
-                 widths = c(1, 1, 1))
+p123 <- plot_grid(p1, p2, p3, nrow = 2, ncol = 2, align = "v",
+                  labels = c("a", "b", "c"), label_size = 11,
+                  label_fontface = "plain")
 plot(p123)
 
 ggsave(filename = "figures/fig1.png", p123, dpi = 400,
-       units = "cm", width = 20, height = 17)
+       units = "cm", width = 20, height = 18)
 
 ### END

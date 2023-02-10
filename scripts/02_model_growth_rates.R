@@ -139,11 +139,11 @@ gr_dat$species <- factor(gr_dat$binomial_code, levels = c("fu_se", "as_no", "fu_
 # df.pred
 df.pred.plot <- df.pred
 df.pred.plot$depth <- factor(df.pred.plot$depth, levels = c("4", "3", "2", "1"))
-levels(df.pred.plot$depth) <- c("-2 to -14", "-14 to -26", "-26 to -38", "-38 to -50")
+levels(df.pred.plot$depth) <- c("[-2 to -14]", "[-14 to -26]", "[-26 to -38]", "[-38 to -50]")
 
 # raw data gr_dat
 gr_dat$depth <- factor(gr_dat$depth, levels = c("4", "3", "2", "1"))
-levels(gr_dat$depth) <- c("-2 to -14", "-14 to -26", "-26 to -38", "-38 to -50")
+levels(gr_dat$depth) <- c("[-2 to -14]", "[-14 to -26]", "[-26 to -38]", "[-38 to -50]")
 
 p1 <- 
   ggplot() +
@@ -166,7 +166,8 @@ p1 <-
   xlab("Depth range (cm)") +
   ylab(expression("Dry biomass change"~(g~g^{-1}~day^{-1}) )) +
   theme_meta() +
-  theme(legend.position = "none")
+  theme(legend.position = "none",
+        axis.text.x = element_text(size = 9))
 plot(p1)
 
 saveRDS(object = p1, file = "figures/fig1b.rds")

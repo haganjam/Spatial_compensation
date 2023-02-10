@@ -287,7 +287,7 @@ p1 <-
        mapping = aes(x = dry_weight_g, y = dry_weight_pred, colour = species)) +
   geom_point(size = 2.5, shape = 16, alpha = 0.5) +
   geom_abline(intercept = 0, slope = 1, colour = "black", linetype = "dashed") +
-  scale_colour_viridis_d(option = "A", end = 0.9) +
+  scale_colour_viridis_d(option = "A", end = 0.9, direction = -1) +
   facet_wrap(~species, scales = "free") +
   ylab("Predicted dry weight (g)") +
   xlab("Observed dry weight (g)") +
@@ -387,8 +387,8 @@ tra_a_plot$species <- factor(tra_a_plot$species,
                              levels = c("F. serratus", "A. nodosum", "F. vesiculosus", "F. spiralis"))
 
 # modify the depth zone factor
-tra_a_plot$depth <- factor(tra_a_plot$depth_zone, levels = c("4", "3", "2", "1"))
-levels(tra_a_plot$depth) <- c("-2 to -14", "-14 to -26", "-26 to -38", "-38 to -50")
+tra_a_plot$depth <- factor(tra_a_plot$depth, levels = c("4", "3", "2", "1"))
+levels(tra_a_plot$depth) <- c("[-2 to -14]", "[-14 to -26]", "[-26 to -38]", "[-38 to -50]")
 
 p2 <- 
   ggplot(data = tra_a_plot,
@@ -397,9 +397,11 @@ p2 <-
            alpha = 0.75, colour = "black") +
   scale_fill_viridis_d(option = "A", end = 0.9) +
   ylab("Standing dry biomass (g)") +
+  scale_y_continuous(expand = c(0, 0), limits = c(0, 575)) +
   xlab("Depth range (cm)") +
   labs(fill = "Species") +
-  theme_meta()
+  theme_meta() +
+  theme(axis.text.x = element_text(size = 9))
 plot(p2)
 
 saveRDS(object = p2, file = "figures/fig1a.rds")
