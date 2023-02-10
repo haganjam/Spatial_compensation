@@ -68,7 +68,7 @@ sp_code <- c("fu_sp", "fu_ve", "as_no", "fu_se")
 sp_names <- c("F. spiralis Extinct", "F. vesiculosus Extinct", "A. nodosum Extinct", "F. serratus Extinct")
 
 # axis labels
-ylabs <- c("Change in productivity (%)", "", "Change in productivity (%)", "")
+ylabs <- c(expression("Dry biomass prod."~(g~day^{-1}) ), "", expression("Dry biomass prod."~(g~day^{-1}) ), "")
 xlabs <- list(NULL, NULL, "Depth range (cm)", "Depth range (cm)")
 x.text <- c("white", "white", "black", "black")
 x.text.size <- c(1, 1, 10, 10)
