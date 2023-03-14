@@ -60,14 +60,16 @@ m1 <- ulam(
     mu <- alpha[species, depth],
     
     # adaptive priors
-    vector[4]:alpha[species] ~ multi_normal(0, Rho_species, sigma_species),
+    vector[4]:alpha[species] ~ multi_normal(mu_depth, Rho_depth, sigma_depth),
     
     # fixed priors
-    sigma_species ~ dexp(1),
-    Rho_species ~ dlkjcorr(4),
+    vector[4]:mu_depth ~ dnorm(0, 1),
+    Rho_depth ~ dlkjcorr(2),
+    vector[4]:sigma_depth ~ dexp(1),
+    
     sigma ~ dexp(1)
     
-  ) , data = dat_sp, chains = 4 , cores = 4 )
+  ) , data = dat_sp, chains = 4 , cores = 4, control = list(adapt_delta = 0.99))
 
 # check the precis output and the trace-plots
 
@@ -109,6 +111,10 @@ ggplot() +
   geom_hline(yintercept = 0, linetype = "dashed") +
   facet_wrap(~species, scales = "free") +
   theme_meta()
+
+# plot the relationship between observed and predicted values
+plot(x$mu, x$growth)
+abline(a = 0, b = 1)
 
 # we just treat the depth zones as discrete variables instead of predicting to this new data
 
