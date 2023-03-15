@@ -41,11 +41,11 @@ prod <-
             PI_high = quantile(prod, 0.95))
 
 # change factor levels of species
-prod$species <- factor(prod$species, levels = c("fu_se", "as_no", "fu_ve", "fu_sp"))
+prod$species <- factor(prod$species, levels = c("fu_sp", "fu_ve", "as_no", "fu_se"))
 
 # change the factor levels of depth
 prod$depth <- factor(prod$depth_zone, levels = c("4", "3", "2", "1"))
-levels(prod$depth) <- c("[-2 to -14]", "[-14 to -26]", "[-26 to -38]", "[-38 to -50]")
+levels(prod$depth) <- paste0("DZ", c("1", "2", "3", "4"))
 
 prod_sum <- 
   bind_rows(prod_raw, .id = "sample_gr") %>%
@@ -57,7 +57,7 @@ prod_sum <-
 
 # change the factor levels of depth
 prod_sum$depth <- factor(prod_sum$depth_zone, levels = c("4", "3", "2", "1"))
-levels(prod_sum$depth) <- c("[-2 to -14]", "[-14 to -26]", "[-26 to -38]", "[-38 to -50]")
+levels(prod_sum$depth) <- paste0("DZ", c("1", "2", "3", "4"))
 
 p1 <- 
   ggplot() +
@@ -76,11 +76,11 @@ p1 <-
                 mapping = aes(x = depth, ymin = PI_low, ymax = PI_high),
                 width = 0, colour = "red") +
   scale_colour_viridis_d(option = "A", end = 0.9) +
-  xlab("Depth range (cm)") +
+  xlab("") +
   ylab(expression("Dry biomass prod."~(g~day^{-1}) )) +
   theme_meta() +
   theme(legend.position = "none",
-        axis.text.x = element_text(size = 9))
+        axis.text.x = element_text(size = 11))
 plot(p1)
 
 saveRDS(object = p1, file = "figures/fig1c.rds")

@@ -169,11 +169,11 @@ p1 <-
             mapping = aes(x = as.integer(depth), y=mu, colour = species),
             position = position_dodge(0.25)) +
   scale_colour_viridis_d(option = "A", end = 0.9) +
-  xlab("Depth range (cm)") +
+  xlab("") +
   ylab(expression("Dry biomass change"~(g~g^{-1}~day^{-1}) )) +
   theme_meta() +
   theme(legend.position = "none",
-        axis.text.x = element_text(size = 9))
+        axis.text.x = element_text(size = 11))
 plot(p1)
 
 saveRDS(object = p1, file = "figures/fig1b.rds")
