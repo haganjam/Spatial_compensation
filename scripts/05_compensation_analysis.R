@@ -31,13 +31,23 @@ sp_dat <-
 # check the summary
 summary(sp_dat)
 
+# check the distribution of the percentage changes
+ggplot(data = sp_dat,
+       mapping = aes(x = prod_change_perc)) +
+  geom_density() +
+  facet_wrap(~species_ext, scales = "free")
+
 # check the maxima: These marginal cases
 sp_dat %>%
   filter(prod_change_perc > 10000)
 
+# check the minima
+sp_dat %>%
+  filter(prod_change_perc < -10000)
+
 # change the factor levels of depth
 sp_dat$depth <- factor(sp_dat$depth, levels = c("4", "3", "2", "1"))
-levels(sp_dat$depth) <- c("[-2 to -14]", "[-14 to -26]", "[-26 to -38]", "[-38 to -50]")
+levels(sp_dat$depth) <- paste0("DZ", c("1", "2", "3", "4"))
 
 # check the summary data
 summary(sp_dat)
@@ -45,11 +55,11 @@ summary(sp_dat)
 # calculate summary variables for the percentage change
 sp_dat %>%
   group_by(species_ext, depth, comp_level) %>%
-  summarise(mu = mean(prod_change_perc),
-            PI_low = quantile(prod_change_perc, 0.05),
-            PI_high = quantile(prod_change_perc, 0.95),
+  summarise(mu_init = mean(prod_init),
+            mu_change = mean(prod_change),
             n = n(), .groups = "drop") %>%
   filter(comp_level %in% c(0.1, 0.5, 0.9)) %>%
+  mutate(mu_change_perc = (mu_change/mu_init)*100 ) %>%
   View()
 
 
@@ -79,9 +89,9 @@ sp_names <- c("F. spiralis Extinct", "F. vesiculosus Extinct", "A. nodosum Extin
 
 # axis labels
 ylabs <- c(expression("Dry biomass prod."~(g~day^{-1}) ), "", expression("Dry biomass prod."~(g~day^{-1}) ), "")
-xlabs <- list(NULL, NULL, "Depth range (cm)", "Depth range (cm)")
+xlabs <- list(NULL, NULL, NULL, NULL)
 x.text <- c("white", "white", "black", "black")
-x.text.size <- c(1, 1, 9, 9)
+x.text.size <- c(1, 1, 11, 11)
 
 # set the ylims for the different species
 ylims <- list(c(-3, 3),

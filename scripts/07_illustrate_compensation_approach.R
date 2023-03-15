@@ -93,11 +93,11 @@ for(i in 1:length(fig_list)) {
   
   # change levels of the factor
   tra_a_plot$species <- factor(tra_a_plot$species,
-                               levels = c("F. serratus", "A. nodosum", "F. vesiculosus", "F. spiralis"))
+                               c("F. spiralis", "F. vesiculosus", "A. nodosum", "F. serratus"))
   
   # change the levels of the depth factor
   tra_a_plot$depth <- factor(tra_a_plot$depth, levels = c("4", "3", "2", "1"))
-  levels(tra_a_plot$depth) <- c("[-2 to -14]", "[-14 to -26]", "[-26 to -38]", "[-38 to -50]")
+  levels(tra_a_plot$depth) <- paste0("DZ", c("1", "2", "3", "4"))
   
   p1 <- 
     ggplot(data = tra_a_plot,
@@ -111,7 +111,7 @@ for(i in 1:length(fig_list)) {
     labs(fill = "Species") +
     theme_meta() +
     theme(legend.position = "none",
-          axis.text.x = element_text(size = 9))
+          axis.text.x = element_text(size = 11))
   
   fig_list[[i]] <- p1
   
@@ -138,12 +138,13 @@ grow_plot <-
                values_to = "growth_rate")
 
 # change levels of the species factor
-grow_plot$species <- factor(grow_plot$species, levels = c("fu_se", "as_no", "fu_ve",  "fu_sp"))
-levels(grow_plot$species) <- c("F. serratus", "A. nodosum", "F. vesiculosus", "F. spiralis")
+grow_plot$species <- factor(grow_plot$species, 
+                            levels = c("fu_sp", "fu_ve", "as_no", "fu_se"))
+levels(grow_plot$species) <- c("F. spiralis", "F. vesiculosus", "A. nodosum", "F. serratus")
 
 # change the levels of the depth factor
 grow_plot$depth <- factor(grow_plot$depth, levels = c("4", "3", "2", "1"))
-levels(grow_plot$depth) <-  c("[-2 to -14]", "[-14 to -26]", "[-26 to -38]", "[-38 to -50]")
+levels(grow_plot$depth) <-  paste0("DZ", c("1", "2", "3", "4"))
 
 p3 <- 
   ggplot() +
@@ -155,13 +156,13 @@ p3 <-
             mapping = aes(x = as.integer(depth), y=growth_rate, colour = species),
             position = position_dodge(0.25), show.legend = FALSE) +
   scale_colour_viridis_d(option = "A", end = 0.9) +
-  xlab("Depth range (cm)") +
+  xlab("") +
   ylab(expression("Dry biomass change"~(g~g^{-1}~day^{-1}) )) +
   ggtitle("") +
   theme_meta() +
   theme(plot.title = element_text(size = 11),
         legend.position = "none",
-        axis.text.x = element_text(size = 9))
+        axis.text.x = element_text(size = 11))
 plot(p3)
 
 # calculate productivity in the intact and without compensation
@@ -185,7 +186,7 @@ prod <-
   group_by(depth, species)
 
 # change factor levels of species
-prod$species <- factor(prod$species, levels = c("fu_se", "as_no", "fu_ve", "fu_sp"))
+prod$species <- factor(prod$species, levels = c("fu_sp", "fu_ve", "as_no", "fu_se"))
 
 # change factor levels of loss
 prod$loss <- factor(prod$loss)
@@ -199,7 +200,7 @@ prod_sum <-
 
 # change the levels of the depth factor
 prod_sum$depth <- factor(prod_sum$depth, levels = c("4", "3", "2", "1"))
-levels(prod_sum$depth) <- c("[-2 to -14]", "[-14 to -26]", "[-26 to -38]", "[-38 to -50]")
+levels(prod_sum$depth) <-  paste0("DZ", c("1", "2", "3", "4"))
 
 p4 <- 
   ggplot(prod_sum,
@@ -209,7 +210,7 @@ p4 <-
   geom_bar(width = 0.5, stat = "identity", position = "dodge",
            alpha = 0.65, colour = "black") +
   scale_fill_manual(values = c("black", "grey")) +
-  xlab("Depth range (cm)") +
+  xlab("") +
   ylab(expression("Dry biomass prod."~(g~day^{-1}) )) +
   theme_meta() +
   ggtitle("") +
@@ -218,7 +219,7 @@ p4 <-
         legend.title = element_blank(),
         legend.text = element_text(size = 9),
         plot.title = element_text(size = 11),
-        axis.text.x = element_text(size = 9),
+        axis.text.x = element_text(size = 11),
         )
 plot(p4)
 
