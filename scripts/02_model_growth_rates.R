@@ -129,27 +129,27 @@ df.pred$mu <- apply(sim.gr, 2, function(x) mean(x/100))
 df.pred$PI_low <- apply(sim.gr, 2, function(x) PI(x/100, prob = 0.90)[1] )
 df.pred$PI_high <- apply(sim.gr, 2, function(x) PI(x/100, prob = 0.90)[2] )
 
-# convert the species variable into a factor to make the colours are equalised
-df.pred$species <- factor(df.pred$species, levels = c("2", "1", "4", "3"))
-levels(df.pred$species) <- c("fu_se", "as_no", "fu_ve", "fu_sp")
+# convert the species variable into a factor to make sure the colours are equalised
+df.pred$species <- factor(df.pred$species, levels = c("3", "4", "1", "2"))
+levels(df.pred$species) <- c("fu_sp", "fu_ve", "as_no", "fu_se")
 
 # plot the modeled growth rates
 
 # get the raw data
 gr_dat$depth <- as.integer(as.factor(gr_dat$depth_treatment))
 gr_dat$growth <- (gr_dat$dry_weight_g_daily_change/100)
-gr_dat$species <- factor(gr_dat$binomial_code, levels = c("fu_se", "as_no", "fu_ve", "fu_sp"))
+gr_dat$species <- factor(gr_dat$binomial_code, levels = c("fu_sp", "fu_ve", "as_no", "fu_se"))
 
 # modify the depth factors
 
 # df.pred
 df.pred.plot <- df.pred
 df.pred.plot$depth <- factor(df.pred.plot$depth, levels = c("4", "3", "2", "1"))
-levels(df.pred.plot$depth) <- c("[-2 to -14]", "[-14 to -26]", "[-26 to -38]", "[-38 to -50]")
+levels(df.pred.plot$depth) <- paste0("DZ", c("1", "2", "3", "4"))
 
 # raw data gr_dat
 gr_dat$depth <- factor(gr_dat$depth, levels = c("4", "3", "2", "1"))
-levels(gr_dat$depth) <- c("[-2 to -14]", "[-14 to -26]", "[-26 to -38]", "[-38 to -50]")
+levels(gr_dat$depth) <- paste0("DZ", c("1", "2", "3", "4"))
 
 p1 <- 
   ggplot() +
