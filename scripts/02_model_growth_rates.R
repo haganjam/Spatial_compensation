@@ -10,7 +10,7 @@ library(rethinking)
 library(ggplot2)
 
 # load the plotting theme
-source("scripts/function_plotting_theme.R")
+source("scripts/function1_plotting_theme.R")
 
 # load the growth rate data
 gr_dat <- read_csv("data/compensation_data.csv")

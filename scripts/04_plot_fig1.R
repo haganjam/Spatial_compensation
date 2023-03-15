@@ -10,7 +10,7 @@ library(cowplot)
 library(here)
 
 # load the plotting theme
-source(here("scripts/function_plotting_theme.R"))
+source(here("scripts/function1_plotting_theme.R"))
 
 p1 <- readRDS(file = here("figures/fig1a.rds"))
 p1 <- 

@@ -11,7 +11,7 @@ library(ggpubr)
 library(here)
 
 # load the plotting theme
-source(here("scripts/function_plotting_theme.R"))
+source(here("scripts/function1_plotting_theme.R"))
 
 # load the rds data
 sp_dat <- readRDS(file = here("data/species_extinction_analysis.rds"))

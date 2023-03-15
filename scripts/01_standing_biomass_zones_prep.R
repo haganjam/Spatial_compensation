@@ -9,7 +9,7 @@ library(ggplot2)
 library(here)
 
 # load the plotting theme
-source("scripts/function_plotting_theme.R")
+source("scripts/function1_plotting_theme.R")
 
 # import the raw transect data
 tra_dat <- read_csv(file = "data/transect_data.csv",

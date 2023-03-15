@@ -9,8 +9,8 @@ library(ggplot2)
 library(here)
 
 # load the winfree functions
-source("scripts/winfree_2018_functions.R")
-source("scripts/function_plotting_theme.R")
+source("scripts/function2_winfree_2018.R")
+source("scripts/function1_plotting_theme.R")
 
 # load the summarised transect data
 tra_dat <- readRDS(file = "data/transect_ssdb.rds")

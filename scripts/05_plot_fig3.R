@@ -10,7 +10,7 @@ library(cowplot)
 library(here)
 
 # load the winfree functions
-source(here("scripts/function_plotting_theme.R"))
+source(here("scripts/function1_plotting_theme.R"))
 
 # load the summarised transect data
 tra_dat <- readRDS(file = here("data/transect_ssdb.rds"))
