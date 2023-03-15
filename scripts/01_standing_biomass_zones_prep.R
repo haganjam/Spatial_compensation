@@ -403,7 +403,7 @@ p2 <-
   labs(fill = "Species") +
   theme_meta() +
   geom_vline(xintercept = c(1.5, 2.5, 3.5), linetype = "dashed", colour = "grey") +
-  theme(axis.text.x = element_text(size = 11),
+  theme(axis.text.x = element_text(size = 12),
         axis.ticks.x = element_blank())
 plot(p2)
 

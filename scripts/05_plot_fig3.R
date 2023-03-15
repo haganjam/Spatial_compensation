@@ -109,14 +109,14 @@ for(i in 1:length(fig_list)) {
     xlab(NULL) +
     scale_y_continuous(expand = c(0, 0), limits = c(0, 570)) +
     labs(fill = "Species") +
+    geom_vline(xintercept = c(1.5, 2.5, 3.5), linetype = "dashed", colour = "grey") +
     theme_meta() +
     theme(legend.position = "none",
-          axis.text.x = element_text(size = 11))
+          axis.text.x = element_text(size = 12))
   
   fig_list[[i]] <- p1
   
 }
-
 
 p1 <- 
   fig_list[[1]] +
@@ -162,7 +162,7 @@ p3 <-
   theme_meta() +
   theme(plot.title = element_text(size = 11),
         legend.position = "none",
-        axis.text.x = element_text(size = 11))
+        axis.text.x = element_text(size = 12))
 plot(p3)
 
 # calculate productivity in the intact and without compensation
@@ -219,7 +219,7 @@ p4 <-
         legend.title = element_blank(),
         legend.text = element_text(size = 9),
         plot.title = element_text(size = 11),
-        axis.text.x = element_text(size = 11),
+        axis.text.x = element_text(size = 12),
         )
 plot(p4)
 

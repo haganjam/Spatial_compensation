@@ -80,7 +80,7 @@ p1 <-
   ylab(expression("Dry biomass prod."~(g~day^{-1}) )) +
   theme_meta() +
   theme(legend.position = "none",
-        axis.text.x = element_text(size = 11))
+        axis.text.x = element_text(size = 12))
 plot(p1)
 
 saveRDS(object = p1, file = "figures/fig1c.rds")

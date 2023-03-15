@@ -91,7 +91,7 @@ sp_names <- c("F. spiralis Extinct", "F. vesiculosus Extinct", "A. nodosum Extin
 ylabs <- c(expression("Dry biomass prod."~(g~day^{-1}) ), "", expression("Dry biomass prod."~(g~day^{-1}) ), "")
 xlabs <- list(NULL, NULL, NULL, NULL)
 x.text <- c("white", "white", "black", "black")
-x.text.size <- c(1, 1, 11, 11)
+x.text.size <- c(1, 1, 12, 12)
 
 # set the ylims for the different species
 ylims <- list(c(-3, 3),
