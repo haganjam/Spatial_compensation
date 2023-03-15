@@ -384,11 +384,12 @@ tra_a_plot <-
 
 # change levels of the factor
 tra_a_plot$species <- factor(tra_a_plot$species,
-                             levels = c("F. serratus", "A. nodosum", "F. vesiculosus", "F. spiralis"))
+                             levels = c("F. spiralis", "F. vesiculosus", "A. nodosum", "F. serratus"))
 
 # modify the depth zone factor
-tra_a_plot$depth <- factor(tra_a_plot$depth, levels = c("4", "3", "2", "1"))
-levels(tra_a_plot$depth) <- c("[-2 to -14]", "[-14 to -26]", "[-26 to -38]", "[-38 to -50]")
+tra_a_plot$depth <- factor(tra_a_plot$depth)
+levels(tra_a_plot$depth) <- paste0("DZ", c("4", "3", "2", "1"))
+tra_a_plot$depth <- factor(tra_a_plot$depth, levels = paste0("DZ", c("1", "2", "3", "4")) )
 
 p2 <- 
   ggplot(data = tra_a_plot,
@@ -398,10 +399,12 @@ p2 <-
   scale_fill_viridis_d(option = "A", end = 0.9) +
   ylab("Standing dry biomass (g)") +
   scale_y_continuous(expand = c(0, 0), limits = c(0, 575)) +
-  xlab("Depth range (cm)") +
+  xlab("") +
   labs(fill = "Species") +
   theme_meta() +
-  theme(axis.text.x = element_text(size = 9))
+  geom_vline(xintercept = c(1.5, 2.5, 3.5), linetype = "dashed", colour = "grey") +
+  theme(axis.text.x = element_text(size = 11),
+        axis.ticks.x = element_blank())
 plot(p2)
 
 saveRDS(object = p2, file = "figures/fig1a.rds")
