@@ -287,7 +287,7 @@ p1 <-
        mapping = aes(x = dry_weight_g, y = dry_weight_pred, colour = species)) +
   geom_point(size = 2.5, shape = 16, alpha = 0.5) +
   geom_abline(intercept = 0, slope = 1, colour = "black", linetype = "dashed") +
-  scale_colour_viridis_d(option = "A", end = 0.9, direction = -1) +
+  scale_colour_viridis_d(option = "A", end = 0.9, direction = 1) +
   facet_wrap(~species, scales = "free") +
   ylab("Predicted dry weight (g)") +
   xlab("Observed dry weight (g)") +
