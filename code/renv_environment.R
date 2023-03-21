@@ -4,7 +4,6 @@
 #' structure using the renv package. The 'cmdstanr' and 'rethinking' packages were ignored
 #' because they are not on CRAN and do not work well with renv
 #' 
-#' @author: James Hagan (james_hagan(at)outlook.com)
 
 # view currently-ignored packaged
 renv::settings$ignored.packages()

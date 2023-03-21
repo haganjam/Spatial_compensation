@@ -1,5 +1,9 @@
-
-# compensation analysis test
+#' @title - calculate standing biomass of macroalgae in different depth zones
+#' 
+#' @description - this script uses allometric equations to convert transects
+#' of four fucoid macroalgae species to standing stock biomass in four
+#' different depth zones.
+#' 
 
 # load relevant libraries
 library(dplyr)
