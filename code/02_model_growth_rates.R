@@ -1,5 +1,9 @@
-
-# Model the growth rates of the individuals across the tile experiment
+#' @title - Model the growth rates of the individuals across the tile experiment
+#' 
+#' @description - this script uses allometric equations to convert transects
+#' of four fucoid macroalgae species to standing stock biomass in four
+#' different depth zones.
+#' 
 
 # load relevant libraries
 library(dplyr)

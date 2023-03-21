@@ -1,0 +1,25 @@
+Type: Compendium
+Package: Spatial compensation
+Title: What the Package Does (One Line, Title Case)
+Version: 1.0
+Authors@R: 
+    person("James", "Hagan", , "james_hagan@outlook.com", role = "aut",
+           comment = c(ORCID = "0000-0002-7504-3393"))
+Description: Spatial compensation of biomass production in Fucoid
+    macroalgae
+License: MIT
+Depends: 
+    broom,
+    cowplot,
+    dplyr,
+    ggbeeswarm,
+    ggplot2,
+    ggpubr,
+    gtools,
+    here,
+    readr,
+    renv,
+    rethinking,
+    tidyr
+Encoding: UTF-8
+LazyData: true

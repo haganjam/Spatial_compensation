@@ -9,7 +9,7 @@
 renv::settings$ignored.packages()
 
 # ignore cmdstanr and the rethinking package because these didn't work with renv
-renv::settings$ignored.packages(c("cmdstanr", "rethinking"), persist = FALSE)
+renv::settings$ignored.packages(c(), persist = FALSE)
 
 # initialise the renv local library
 renv::init()

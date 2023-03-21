@@ -10,7 +10,6 @@ library(dplyr)
 library(readr)
 library(tidyr)
 library(ggplot2)
-library(here)
 
 # load the plotting theme
 source("scripts/function1_plotting_theme.R")
