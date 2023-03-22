@@ -233,7 +233,7 @@ fu_sp <- lm(log_dry_weight_g ~ log_length_cm + log_circum_cm + log_circum_cm2,
             data = df1)
 
 # graphical analyses of residuals
-plot(fu_sp)
+# plot(fu_sp)
 
 # check the model fit
 df1$dry_weight_pred <- exp(predict(fu_sp, data = df1))
@@ -252,7 +252,7 @@ fu_ve <- lm(log_dry_weight_g ~ log_length_cm + log_circum_cm + log_circum_cm2,
             data = df2)
 
 # graphical analyses of residuals
-plot(fu_ve)
+# plot(fu_ve)
 
 # check the model fit
 df2$dry_weight_pred <- exp(predict(fu_ve, data = df2))
@@ -271,7 +271,7 @@ as_no <- lm(log_dry_weight_g ~ log_length_cm + log_circum_cm,
             data = df3)
 
 # graphical analyses of residuals
-plot(as_no)
+# plot(as_no)
 
 # check the model fit
 df3$dry_weight_pred <- exp(predict(as_no, data = df3))
@@ -290,7 +290,7 @@ fu_se <- lm(log_dry_weight_g ~ log_length_cm + log_circum_cm,
             data = df4)
 
 # graphical analyses of residuals
-plot(fu_se)
+# plot(fu_se)
 
 # check the model fit
 df4$dry_weight_pred <- exp(predict(fu_se, data = df4))

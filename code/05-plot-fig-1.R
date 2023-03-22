@@ -1,30 +1,26 @@
-
-# Compensation analysis conceptual figure
+#' @title: plot fig 1
+#' 
+#' @description: this script combines three figures generated in the previous
+#' scripts and plots fig 1 from the manuscript.
+#' 
 
 # load relevant libraries
-library(dplyr)
-library(readr)
-library(tidyr)
 library(ggplot2)
 library(cowplot)
-library(here)
 
-# load the plotting theme
-source(here("scripts/function1_plotting_theme.R"))
-
-p1 <- readRDS(file = here("figures/fig1a.rds"))
+p1 <- readRDS(file = "output/fig_1a.rds")
 p1 <- 
   p1 + 
   ggtitle("") +
   theme(legend.position = "none")
 
-p2 <- readRDS(file = here("figures/fig1b.rds"))
+p2 <- readRDS(file = "output/fig_1b.rds")
 p2 <- 
   p2 + 
   ggtitle("") +
   theme(legend.position = "none")
 
-p3 <- readRDS(file = here("figures/fig1c.rds"))
+p3 <- readRDS(file = "output/fig_1c.rds")
 p3 <- 
   p3 + 
   ggtitle("") +
@@ -36,7 +32,7 @@ p123 <- plot_grid(p1, p2, p3, nrow = 2, ncol = 2, align = "v",
                   label_fontface = "plain")
 plot(p123)
 
-ggsave(filename = "figures/fig1.png", p123, dpi = 400,
+ggsave(filename = "figures-tables/fig_1.png", p123, dpi = 400,
        units = "cm", width = 20, height = 18)
 
 ### END

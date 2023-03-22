@@ -51,7 +51,8 @@ dat_sp <- list(species = as.integer(factor(gr_dat$binomial_code)),
 # sample the stan model: m1
 m1_fit <- rstan::sampling(m1, data = dat_sp, 
                           iter = 1000, chains = 4, algorithm = c("NUTS"),
-                          control = list(adapt_delta = 0.99))
+                          control = list(adapt_delta = 0.99),
+                          seed = 54856)
 
 # check the traceplots and rhat values to assess convergence
 print(m1_fit)
@@ -196,12 +197,12 @@ p1 <-
   ggplot() +
   geom_point(data = gr_dat,
              mapping = aes(x = depth, y = growth, colour = species),
-             shape = 1, alpha = 1, size = 2, 
-             position = position_jitterdodge(jitter.width = 0.2, dodge.width = 0.25)) +
+             shape = 1, alpha = 0.5, size = 1.2, 
+             position = position_jitterdodge(jitter.width = 0.4, dodge.width = 0.25)) +
   geom_hline(yintercept = 0, linetype = "dashed") +
   geom_point(data = df_pred_plot,
              mapping = aes(x = depth, y = mu, colour = species),
-             position = position_dodge(0.25), size = 2) +
+             position = position_dodge(0.25), size = 3, shape = 18) +
   geom_errorbar(data = df_pred_plot,
                 mapping = aes(x = depth, ymin = PI_low, ymax = PI_high, colour = species),
                 width = 0,
