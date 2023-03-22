@@ -1,6 +1,6 @@
-#' @title - calculate standing biomass of macroalgae in different depth zones
+#' @title: calculate standing biomass of macroalgae in different depth zones
 #' 
-#' @description - this script uses allometric equations to convert transects
+#' @description: this script uses allometric equations to convert transects
 #' of four fucoid macroalgae species to standing stock biomass in four
 #' different depth zones.
 #' 
@@ -43,10 +43,10 @@ dep_list <- split(dep_dat, dep_dat$transect_id)
 
 # intialise an output list to store interpolated depth data
 dep_int <- vector("list", length = length(dep_list))
-for(i in 1:length(depth_list)) {
+for(i in 1:length(dep_list)) {
   
   # initialise a data.frame to work with
-  df <- depth_list[[i]]
+  df <- dep_list[[i]]
   
   # get the dividers
   dividers <- which(!is.na(df$depth_correct) )
@@ -330,6 +330,7 @@ df_fit %>%
             error_med = median(error),
             error_m = mean(error),
             error_sd = sd(error))
+
 
 # use these models to predict the dry weight for the individuals in the transect
 
