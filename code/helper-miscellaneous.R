@@ -1,10 +1,13 @@
+#'@title: PI() 
+#'
+#'@description: function to calculate percentile confidence/credible interval
+#'from a vector of data. The function is taken from the rethinking package
+#'McElreath (2020, https://rdrr.io/github/rmcelreath/rethinking/src/R/utilities.r)
+#'
+#'@param samples vector of data to calculate the percentile interval on
+#'@param prob size of the percentile interval (default = 0.89)
+#' 
 
-# miscellaneous functions
-
-# taken from the rethinking package
-# https://rdrr.io/github/rmcelreath/rethinking/src/R/utilities.r
-
-# percentile confidence/credible interval
 PCI <- function( samples , prob=0.89 ) {
   x <- sapply( prob , function(p) {
     a <- (1-p)/2
@@ -28,5 +31,63 @@ PCI <- function( samples , prob=0.89 ) {
   return(result)
 }
 PI <- PCI
+
+#'@title: lm_compare() 
+#'
+#'@description: function to fit multiple linear models to different sets of
+#'predictor variables from a list. The model outputs model coefficients and
+#'model comparison metrics like r2 and AIC.
+#'
+#'@param data data.frame containing the response and predictor variables
+#'@param resp name of the response variable
+#'@param pred list made of vectors of different predictor variables
+#' 
+
+lm_compare <- function(data, resp, pred) {
+  
+  # set an output list for the model coefficients
+  est_lm <- vector("list", length(pred))
+  names(est_lm) <- seq(1:length(pred))
+  
+  # set an output list for the model fit statistics
+  fit_lm <- vector("list", length(pred))
+  names(fit_lm) <- seq_along(1:length(pred))
+  
+  # loop over list with different combinations of 
+  for (i in 1:length(pred) ) {
+    
+    # fit model using chosen predictors
+    lm_pred <- lm(reformulate(pred[[i]], resp), data = data)
+    
+    # write coefficients to the est.lm list
+    est_lm[[i]] <- broom::tidy(lm_pred)
+    
+    # write fit statistics to the fit.lm list
+    fit_lm[[i]] <- broom::glance(lm_pred)
+    
+  }
+  
+  # convert lists to data.frames and join
+  mod <- full_join(bind_rows(est_lm, .id = "model"), 
+                   bind_rows(fit_lm, .id = "model"),
+                   by = "model")
+  
+  # return the data.frame with relevant information
+  return(mod)
+  
+}
+
+#'@title: seaweed_pal()
+#'
+#'@description: colour palette used for the four macroalgae species derived
+#'from water colour images of these species.
+#'
+
+seaweed_pal <- function() {
+  
+  cols <- c("#D97E46", "#7A5414", "#AF994D", "#EAB20A")
+  return(cols)
+  
+}
 
 ### END
