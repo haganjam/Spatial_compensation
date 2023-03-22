@@ -22,8 +22,8 @@ PCI <- function( samples , prob=0.89 ) {
     result[up_idx] <- x[2,i]
     # add names
     a <- (1-prob[i])/2
-    names(result)[low_idx] <- concat(round(a*100,0),"%")
-    names(result)[up_idx] <- concat(round((1-a)*100,0),"%")
+    names(result)[low_idx] <- paste(round(a*100,0),"%")
+    names(result)[up_idx] <- paste(round((1-a)*100,0),"%")
   }
   return(result)
 }

@@ -10,11 +10,12 @@ library(dplyr)
 library(tidyr)
 library(readr)
 library(readr)
-library(rethinking)
+library(rstan)
 library(ggplot2)
 
 # load the plotting theme
-source("scripts/function1_plotting_theme.R")
+source("code/function1_plotting_theme.R")
+source("code/function1_misc_helpers.R")
 
 # load the growth rate data
 gr_dat <- read_csv("data/compensation_data.csv")
@@ -47,6 +48,9 @@ ggplot(data = gr_dat,
   facet_wrap(~binomial_code) +
   theme_classic()
 
+# compile the stan growth rate model
+m1 <- stan_model("code/02-growth-rate-model.stan")
+
 # create a list with the relevant data
 
 # subset fucus vesiculosus
@@ -54,37 +58,42 @@ dat_sp <- list(species = as.integer(factor(gr_dat$binomial_code)),
                depth = as.integer(factor(gr_dat$depth_treatment)),
                growth = gr_dat$dry_weight_g_daily_change)
 
-# fit a model with partial pooling by across depths within each species
-m1 <- ulam(
+# sample the stan model
+m1_fit <- rstan::sampling(m1, data = dat_sp, iter = 1000, chains = 4, algorithm = c("NUTS"),
+                          control = list(adapt_delta = 0.99))
+
+# check the traceplots and rhat values
+print(m1_fit)
+traceplot(m1_fit)
+
+# extract the posterior distribution
+m1_post <- rstan::extract(m1_fit)
+
+
+# check the fit of the model to the observed data
+
+# extract the relevant parameters
+alpha <- m1_post$alpha 
+
+# get predictions from the model for the data
+pred_list <- vector("list", length = length(m1_post$sigma))
+for (i in 1:length(m1_post$sigma)) {
   
-  alist(
+  mu <- 
     
-    growth ~ dnorm(mu, sigma),
+    sapply(1:length(dat_sp$species), function(x) {
     
-    mu <- alpha[species, depth],
+    x <- alpha[, , dat_sp$depth[x]][i , dat_sp$species[x]]
+    return(x)
     
-    # adaptive priors
-    vector[4]:alpha[species] ~ multi_normal(mu_depth, Rho_depth, sigma_depth),
-    
-    # fixed priors
-    vector[4]:mu_depth ~ dnorm(0, 1),
-    Rho_depth ~ dlkjcorr(2),
-    vector[4]:sigma_depth ~ dexp(1),
-    
-    sigma ~ dexp(1)
-    
-  ) , data = dat_sp, chains = 4 , cores = 4, control = list(adapt_delta = 0.99))
+  })
+  
+  pred_list[[i]] <- mu
+  
+}
 
-# check the precis output and the trace-plots
-
-# note the diagonals in the correlation matrix should be NaN because they are constants
-precis(m1, depth = 3)
-traceplot(m1)
-
-# check the fit of the model to the data
-
-# extract the predictions from this model
-mu <- link(m1)
+# bind into a matrix
+mu <- do.call("rbind", pred_list)
 
 # get the mu value 
 dat_sp$mu <- apply(mu, 2, mean)
@@ -93,6 +102,7 @@ dat_sp$mu <- apply(mu, 2, mean)
 dat_sp$PI_low <- apply(mu, 2, min)
 dat_sp$PI_high <- apply(mu, 2, max)
 
+# bind the data list with the predictions into a data.frame
 x <- bind_cols(dat_sp)
 y <- 
   x %>%
@@ -101,6 +111,7 @@ y <-
             PI_low = first(PI_low),
             PI_high = first(PI_high))
 
+# plot the observed data versus the model predictions
 ggplot() +
   geom_jitter(data = x,
               mapping = aes(x = depth, y = growth),
@@ -116,26 +127,45 @@ ggplot() +
   facet_wrap(~species, scales = "free") +
   theme_meta()
 
-# plot the relationship between observed and predicted values
+# plot the relationship between observed and predicted values with a one-to-one line
 plot(x$mu, x$growth)
 abline(a = 0, b = 1)
 
-# we just treat the depth zones as discrete variables instead of predicting to this new data
 
 # simulate a posterior distribution for each species at each transect depth
-df.pred <- expand.grid(depth = c(1:4), species = c(1:4))
 
-# simulate the growth rates
-sim.gr <- link(fit = m1, data = df.pred)
+# set-up a data.frame with the four depth levels crossed with the four species
+df_pred <- expand.grid(depth = c(1:4), species = c(1:4))
 
-# add mu and percentile intervals onto the df.pred data.frame
-df.pred$mu <- apply(sim.gr, 2, function(x) mean(x/100))
-df.pred$PI_low <- apply(sim.gr, 2, function(x) PI(x/100, prob = 0.90)[1] )
-df.pred$PI_high <- apply(sim.gr, 2, function(x) PI(x/100, prob = 0.90)[2] )
+# simulate the expected growth rates growth rates
+pred_list <- vector("list", length = length(m1_post$sigma))
+for (i in 1:length(m1_post$sigma)) {
+  
+  mu <- 
+    
+    sapply(1:length(df_pred$species), function(x) {
+      
+      x <- alpha[, , df_pred$depth[x]][i , df_pred$species[x]]
+      return(x)
+      
+    })
+  
+  pred_list[[i]] <- mu
+  
+}
+
+# bind into a matrix
+sim_gr <- do.call("rbind", pred_list)
+
+# add mu and percentile intervals onto the df_pred data.frame
+# we divide by 100 to get back to the original growth-rate scale
+df_pred$mu <- apply(sim_gr, 2, function(x) mean(x/100))
+df_pred$PI_low <- apply(sim_gr, 2, function(x) PI(x/100, prob = 0.90)[1] )
+df_pred$PI_high <- apply(sim_gr, 2, function(x) PI(x/100, prob = 0.90)[2] )
 
 # convert the species variable into a factor to make sure the colours are equalised
-df.pred$species <- factor(df.pred$species, levels = c("3", "4", "1", "2"))
-levels(df.pred$species) <- c("fu_sp", "fu_ve", "as_no", "fu_se")
+df_pred$species <- factor(df_pred$species, levels = c("3", "4", "1", "2"))
+levels(df_pred$species) <- c("fu_sp", "fu_ve", "as_no", "fu_se")
 
 # plot the modeled growth rates
 
@@ -146,10 +176,10 @@ gr_dat$species <- factor(gr_dat$binomial_code, levels = c("fu_sp", "fu_ve", "as_
 
 # modify the depth factors
 
-# df.pred
-df.pred.plot <- df.pred
-df.pred.plot$depth <- factor(df.pred.plot$depth, levels = c("4", "3", "2", "1"))
-levels(df.pred.plot$depth) <- paste0("DZ", c("1", "2", "3", "4"))
+# df_pred
+df_pred_plot <- df_pred
+df_pred_plot$depth <- factor(df_pred_plot$depth, levels = c("4", "3", "2", "1"))
+levels(df_pred_plot$depth) <- paste0("DZ", c("1", "2", "3", "4"))
 
 # raw data gr_dat
 gr_dat$depth <- factor(gr_dat$depth, levels = c("4", "3", "2", "1"))
@@ -162,14 +192,14 @@ p1 <-
              shape = 1, alpha = 0.3, size = 2, 
              position = position_jitterdodge(jitter.width = 0.2, dodge.width = 0.25)) +
   geom_hline(yintercept = 0, linetype = "dashed") +
-  geom_point(data = df.pred.plot,
+  geom_point(data = df_pred_plot,
              mapping = aes(x = depth, y = mu, colour = species),
              position = position_dodge(0.25), size = 2) +
-  geom_errorbar(data = df.pred.plot,
+  geom_errorbar(data = df_pred_plot,
                 mapping = aes(x = depth, ymin = PI_low, ymax = PI_high, colour = species),
                 width = 0,
                 position = position_dodge(0.25)) +
-  geom_line(data = df.pred.plot,
+  geom_line(data = df_pred_plot,
             mapping = aes(x = as.integer(depth), y=mu, colour = species),
             position = position_dodge(0.25)) +
   scale_colour_viridis_d(option = "A", end = 0.9) +
@@ -180,15 +210,16 @@ p1 <-
         axis.text.x = element_text(size = 12))
 plot(p1)
 
+# save the plot as a .rds file
 saveRDS(object = p1, file = "figures/fig1b.rds")
 
 # convert these growth rates into a list
-sim.gr <- 
+sim_gr <- 
   
-  apply(sim.gr, 1, function(x) {
+  apply(sim_gr, 1, function(x) {
   
   # bind the meta data and relevel the species
-  x <- cbind(df.pred[,c(1, 2)], data.frame(growth = x/100))
+  x <- cbind(df_pred[,c(1, 2)], data.frame(growth = x/100))
   
   # manipulate the data.frame to the appropriate format
   x <- 
@@ -203,9 +234,9 @@ sim.gr <-
 } )
 
 # check this list
-sim.gr[[sample(1:length(sim.gr), 1)]]
+sim_gr[[sample(1:length(sim_gr), 1)]]
 
 # save this growth rate list as a .rds file
-saveRDS(object = sim.gr, file = "data/growth_rate_data.rds")
+saveRDS(object = sim_gr, file = "data/growth_rate_data.rds")
 
 ### END
