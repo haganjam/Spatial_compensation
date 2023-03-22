@@ -1,9 +1,9 @@
 Type: Compendium
 Package: Spatial compensation
-Title: What the Package Does (One Line, Title Case)
+Title: Contains data and code for reproducing spatial compensation analysis (reference)
 Version: 1.0
 Authors@R: 
-    person("James", "Hagan", , "james_hagan@outlook.com", role = "aut",
+    person("James", "Hagan", , "james_hagan@outlook.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-7504-3393"))
 Description: Spatial compensation of biomass production in Fucoid
     macroalgae
@@ -17,9 +17,13 @@ Depends:
     ggpubr,
     gtools,
     here,
+    holepunch,
     readr,
     renv,
     rethinking,
+    rstan,
     tidyr
+Remotes: 
+    karthik/holepunch
 Encoding: UTF-8
 LazyData: true

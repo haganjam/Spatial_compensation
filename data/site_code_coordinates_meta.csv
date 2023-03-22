@@ -1,0 +1,4 @@
+﻿id,varname,description
+var1,site_code,code to identify the experimental site
+var2,lat_dd,site latitude in decimal degrees
+var3,lon_dd,site longitude in decimal degrees

@@ -1,0 +1,28 @@
+id,varname,description
+var1,date,date - ( yyyy_mm_dd )
+var2,time,"time - (00h00, 24-hour format) CET"
+var3,method,"method used to take the measurement (method 1 corresponds to height and circumference being measured in the lab without the washer, method 2 corresponds to height and circumference being measured in the field without the washer)"
+var4,field_observer,"person taking the field measurements of length, circumference and depth (LG - Lars Gamfeldt, JH - James Hagan, BB - Benedikt Brunner, MW - Merle Weissman, LC - Laura Capellatti)"
+var5,water_level_cm,water level (cm) displayed in relation to the RH2000 reference level (National Height System 2000 of Sweden)
+var6,site_code,code to identify the experimental site
+var7,field_species_name,name of species as per the field notes (i.e. exactly what was written in the field notebook)
+var8,genus_name,name of the genus in lowercase letters (e.g. fucus)
+var9,binomial,full name separated by an underscore in lowercase letters (e.g. fucus_vesiculosus)
+var10,binomial_code,"shortened binomial species name: as_no - Ascophyllum nodosum, fu_sp - Fucus spiralis, fu_ve - Fucus vesiculosus, fu_se - Fucus serratus"
+var11,sample_number,"number given to each sample taken at a given site, on given sampling date (integer between 1 and infinity) and species (in relevant cases)"
+var12,sample_waypoint_name,name of the waypoint typed into the GPS (no standardised format required) when the measurement was taken
+var13,sample_lon_dd,sample longitude in decimal degrees
+var14,sample_lat_dd,sample latitude in decimal degrees
+var15,sub_sample_number,"number given to each sub-sample taken for a given sample_number (integer between 1 and infinity). If only one sample is taken for a given sample_number, then this gets a ‘1’. There are no GPS points for the sub_sample_number because the samples are taken from the same sampling coordinate (e.g. taking several specimens from one location)."
+var16,depth_cm,measured depth based on the current water level (i.e. cm below or above the water level observed)
+var17,sample_id,unique sample identifier: date.site_code.binomial_code.sample_number.sub_sample_number
+var18,field_sample_id,random sample identifier given to the labelled sample in the field
+var19,length_cm,length of the individual plant (cm) measured using a rule or measuring tape
+var20,circum_cm,circumference (cm) of the thickest part of the plant as per Aberg (1992)
+var21,wet_weight_g,weight of the wet plant (g)
+var22,wet_w_scale,scale used to measure the wet weight
+var23,wet_w_obs,"person weighing the plant for wet weight (LG - Lars Gamfeldt, JH - James Hagan, BB - Benedikt Brunner, MW - Merle Weissman, LC - Laura Capellatti)"
+var24,dry_weight_g,weight of the plant (g) after being dried at between 50 and 60 degrees
+var25,dry_w_scale,scale used to the measure the dry weight
+var26,dry_w_obs,"person weighing the plant for dry weight (LG - Lars Gamfeldt, JH - James Hagan, BB - Benedikt Brunner, MW - Merle Weissman, LC - Laura Capellatti)"
+var27,notes,additional notes
