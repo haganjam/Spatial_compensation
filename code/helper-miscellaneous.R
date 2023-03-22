@@ -32,6 +32,20 @@ PCI <- function( samples , prob=0.89 ) {
 }
 PI <- PCI
 
+#'@title: var2() 
+#'
+#'@description: function to calculate variance that does not use (n-1) as
+#'the denominator. The function is taken from the rethinking package
+#'McElreath (2020, https://rdrr.io/github/rmcelreath/rethinking/src/R/utilities.r)
+#'
+#'@param x vector of data to calculate the percentile interval on
+#' 
+
+var2 <- function( x , na.rm = TRUE ) {
+  # use E(x^2) - E(x)^2 form
+  mean(x^2) - mean(x)^2
+}
+
 #'@title: lm_compare() 
 #'
 #'@description: function to fit multiple linear models to different sets of

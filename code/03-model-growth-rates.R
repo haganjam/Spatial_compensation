@@ -9,16 +9,15 @@
 library(dplyr)
 library(tidyr)
 library(readr)
-library(readr)
 library(rstan)
 library(ggplot2)
 
-# load the plotting theme
-source("code/function1_plotting_theme.R")
-source("code/function1_misc_helpers.R")
+# load relevant helper functions
+source("code/helper-plotting-theme.R")
+source("code/helper-miscellaneous.R")
 
 # load the growth rate data
-gr_dat <- read_csv("data/compensation_data.csv")
+gr_dat <- read_csv("data/growth_rate_data.csv")
 head(gr_dat)
 
 # remove growth rate NAs
@@ -36,15 +35,8 @@ gr_dat <-
 
 # compare the growth rates overall among species
 ggplot(data = gr_dat,
-       mapping = aes(x = binomial_code, dry_weight_g_daily_change)) +
-  geom_boxplot() +
-  theme_classic()
-
-# relationship between growth and depth among species
-ggplot(data = gr_dat,
        mapping = aes(x = depth_treatment, y = dry_weight_g_daily_change)) +
   geom_point() +
-  geom_smooth() +
   facet_wrap(~binomial_code) +
   theme_classic()
 
@@ -52,23 +44,21 @@ ggplot(data = gr_dat,
 m1 <- stan_model("code/02-growth-rate-model.stan")
 
 # create a list with the relevant data
-
-# subset fucus vesiculosus
 dat_sp <- list(species = as.integer(factor(gr_dat$binomial_code)),
                depth = as.integer(factor(gr_dat$depth_treatment)),
                growth = gr_dat$dry_weight_g_daily_change)
 
-# sample the stan model
-m1_fit <- rstan::sampling(m1, data = dat_sp, iter = 1000, chains = 4, algorithm = c("NUTS"),
+# sample the stan model: m1
+m1_fit <- rstan::sampling(m1, data = dat_sp, 
+                          iter = 1000, chains = 4, algorithm = c("NUTS"),
                           control = list(adapt_delta = 0.99))
 
-# check the traceplots and rhat values
+# check the traceplots and rhat values to assess convergence
 print(m1_fit)
-traceplot(m1_fit)
+traceplot(m1_fit, pars = c("alpha") )
 
-# extract the posterior distribution
+# extract the samples from the estiamted posterior distribution
 m1_post <- rstan::extract(m1_fit)
-
 
 # check the fit of the model to the observed data
 
@@ -98,14 +88,14 @@ mu <- do.call("rbind", pred_list)
 # get the mu value 
 dat_sp$mu <- apply(mu, 2, mean)
 
-# get the PI value
+# get the minimum and maximum values
 dat_sp$PI_low <- apply(mu, 2, min)
 dat_sp$PI_high <- apply(mu, 2, max)
 
 # bind the data list with the predictions into a data.frame
-x <- bind_cols(dat_sp)
-y <- 
-  x %>%
+obs <- bind_cols(dat_sp)
+pred <- 
+  obs %>%
   group_by(species, depth) %>%
   summarise(mu = first(mu), 
             PI_low = first(PI_low),
@@ -113,22 +103,38 @@ y <-
 
 # plot the observed data versus the model predictions
 ggplot() +
-  geom_jitter(data = x,
+  geom_jitter(data = obs,
               mapping = aes(x = depth, y = growth),
               alpha = 0.25, shape = 16, size = 2, width = 0.1) +
-  geom_point(data = y,
+  geom_point(data = pred,
              mapping = aes(x = depth, y = mu), colour = "red") +
-  geom_line(data = y,
+  geom_line(data = pred,
             mapping = aes(x = depth, y = mu), colour = "red") +
-  geom_errorbar(data = y,
+  geom_errorbar(data = pred,
                 mapping = aes(x = depth, ymin = PI_low, ymax = PI_high),
                 width = 0, colour = "red") +
   geom_hline(yintercept = 0, linetype = "dashed") +
   facet_wrap(~species, scales = "free") +
   theme_meta()
 
+# calculate the r2 of this model
+r2 <- 
+  
+  apply(mu, 1, function(x) {
+    
+    r <- x - obs$growth
+    r <- 1 - (var2(r)/var2(obs$growth))
+    
+    return(r)
+    
+  } )
+
+# calculate the summary statistics of the r2 value
+mean(r2)
+range(r2)
+
 # plot the relationship between observed and predicted values with a one-to-one line
-plot(x$mu, x$growth)
+plot(obs$mu, obs$growth)
 abline(a = 0, b = 1)
 
 
@@ -167,6 +173,7 @@ df_pred$PI_high <- apply(sim_gr, 2, function(x) PI(x/100, prob = 0.90)[2] )
 df_pred$species <- factor(df_pred$species, levels = c("3", "4", "1", "2"))
 levels(df_pred$species) <- c("fu_sp", "fu_ve", "as_no", "fu_se")
 
+
 # plot the modeled growth rates
 
 # get the raw data
@@ -189,7 +196,7 @@ p1 <-
   ggplot() +
   geom_point(data = gr_dat,
              mapping = aes(x = depth, y = growth, colour = species),
-             shape = 1, alpha = 0.3, size = 2, 
+             shape = 1, alpha = 1, size = 2, 
              position = position_jitterdodge(jitter.width = 0.2, dodge.width = 0.25)) +
   geom_hline(yintercept = 0, linetype = "dashed") +
   geom_point(data = df_pred_plot,
@@ -202,7 +209,8 @@ p1 <-
   geom_line(data = df_pred_plot,
             mapping = aes(x = as.integer(depth), y=mu, colour = species),
             position = position_dodge(0.25)) +
-  scale_colour_viridis_d(option = "A", end = 0.9) +
+  # scale_colour_viridis_d(option = "A", end = 0.9) +
+  scale_colour_manual(values = seaweed_pal()) +
   xlab("") +
   ylab(expression("Dry biomass change"~(g~g^{-1}~day^{-1}) )) +
   theme_meta() +
@@ -211,7 +219,7 @@ p1 <-
 plot(p1)
 
 # save the plot as a .rds file
-saveRDS(object = p1, file = "figures/fig1b.rds")
+saveRDS(object = p1, file = "output/fig_1b.rds")
 
 # convert these growth rates into a list
 sim_gr <- 
@@ -221,7 +229,7 @@ sim_gr <-
   # bind the meta data and relevel the species
   x <- cbind(df_pred[,c(1, 2)], data.frame(growth = x/100))
   
-  # manipulate the data.frame to the appropriate format
+  # manipulate the data.frame to the appropriate long format
   x <- 
     x %>%
     pivot_wider(id_cols = "depth",
@@ -237,6 +245,6 @@ sim_gr <-
 sim_gr[[sample(1:length(sim_gr), 1)]]
 
 # save this growth rate list as a .rds file
-saveRDS(object = sim_gr, file = "data/growth_rate_data.rds")
+saveRDS(object = sim_gr, file = "output/model_growth_rates.rds")
 
 ### END
