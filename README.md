@@ -1,4 +1,4 @@
-# How many species are required to maintain ecosystem functioning at large spatial scales?
+## How many species are required to maintain ecosystem functioning at large spatial scales?
 
 This repository contains data and code for modelling the response of dry biomass productivity to species loss in a macroalgae system. It is associated with the following publication:
 
