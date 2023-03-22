@@ -211,7 +211,7 @@ tab_s1 <-
   arrange(species, AIC)
 
 # export this table as a .csv file
-write_csv(x = tab_s1, file = "figures-tables/table_s1.csv")
+write_csv(x = tab_s1, file = "figures-tables/table_S1.csv")
 
 
 # run the best models for each species
@@ -315,12 +315,11 @@ p1 <-
   xlab("Observed dry weight (g)") +
   guides(colour = guide_legend(override.aes = list(size = 3.5))) +
   theme_meta() +
-  theme(legend.title = element_blank(),
-        legend.key = element_blank())
+  theme(legend.position = "none")
 plot(p1)
 
-ggsave(filename = "figures-tables/fig_s1.png", p1, dpi = 400,
-       units = "cm", width = 18, height = 14)
+ggsave(filename = "figures-tables/fig_S1.png", p1, dpi = 400,
+       units = "cm", width = 15, height = 14)
 
 # calculate the average and standard deviation of the error
 df_fit %>%
