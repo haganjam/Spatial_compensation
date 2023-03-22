@@ -1,0 +1,102 @@
+date,time,method,field_observer,water_level_cm,site_code,field_species_name,genus_name,binomial,binomial_code,sample_number,sample_waypoint_name,sample_lon_dd,sample_lat_dd,sub_sample_number,depth_cm,sample_id,field_sample_id,length_cm,circum_cm,wet_weight_g,wet_w_scale,wet_w_obs,dry_weight_g,dry_w_scale,dry_w_obs,notes
+2021_06_02,NA,method_1,BB,NA,beis_a,F. serratus,fucus,fucus_serratus,fu_se,1,NA,NA,NA,NA,NA,NA,NA,21,5,8,waterproof_scale,BB,1.86,scout_pro_field_scale,BB,sample label dry weight: BI1 F.S.
+2021_06_02,NA,method_1,BB,NA,beis_a,F. serratus,fucus,fucus_serratus,fu_se,2,NA,NA,NA,NA,NA,NA,NA,36,7,22,waterproof_scale,BB,5.21,sartorius_scale,BB,sample label dry weight: BI2 F.S.
+2021_06_02,NA,method_1,BB,NA,laho_c,F. serratus,fucus,fucus_serratus,fu_se,1,NA,NA,NA,NA,NA,NA,NA,65,20,432,waterproof_scale,BB,84.86,scout_pro_field_scale,BB,sample label dry weight: LH1 F.S.
+2021_06_02,NA,method_1,BB,NA,laho_c,F. serratus,fucus,fucus_serratus,fu_se,2,NA,NA,NA,NA,NA,NA,NA,78,8,157,waterproof_scale,BB,29.55,sartorius_scale,BB,sample label dry weight: LH2 F.S.
+2021_06_02,NA,method_1,BB,NA,laho_c,F. serratus,fucus,fucus_serratus,fu_se,3,NA,NA,NA,NA,NA,NA,NA,63,22,631,waterproof_scale,BB,120.95,scout_pro_field_scale,BB,sample label dry weight: LH3 F.S.
+2021_06_02,NA,method_1,BB,NA,laho_c,F. serratus,fucus,fucus_serratus,fu_se,4,NA,NA,NA,NA,NA,NA,NA,70,12,198,waterproof_scale,BB,37.6,scout_pro_field_scale,BB,sample label dry weight: LH4 F.S.
+2021_06_02,NA,method_1,BB,NA,laho_c,F. serratus,fucus,fucus_serratus,fu_se,5,NA,NA,NA,NA,NA,NA,NA,43,8,50,waterproof_scale,BB,11.17,scout_pro_field_scale,BB,sample label dry weight: LH5 F.S.
+2021_06_02,NA,method_1,BB,NA,laho_c,F. serratus,fucus,fucus_serratus,fu_se,6,NA,NA,NA,NA,NA,NA,NA,41,8,49,waterproof_scale,BB,11.51,scout_pro_field_scale,BB,sample label dry weight: LH6 F.S.
+2021_06_02,NA,method_1,BB,NA,laho_c,F. serratus,fucus,fucus_serratus,fu_se,7,NA,NA,NA,NA,NA,NA,NA,27.5,5,14,waterproof_scale,BB,4.35,sartorius_scale,BB,sample label dry weight: LH7 F.S.
+2021_06_02,NA,method_1,BB,NA,laho_c,F. serratus,fucus,fucus_serratus,fu_se,8,NA,NA,NA,NA,NA,NA,NA,20,3,5,waterproof_scale,BB,0.99,scout_pro_field_scale,BB,sample label dry weight: LH8 F.S.
+2021_06_01,NA,method_1,BB,NA,maku_a,F. serratus,fucus,fucus_serratus,fu_se,1,NA,NA,NA,NA,NA,NA,NA,40.1,9,50,waterproof_scale,BB,11.15,sartorius_scale,BB,sample label dry weight: LI1 F.S.
+2021_06_01,NA,method_1,BB,NA,maku_a,F. serratus,fucus,fucus_serratus,fu_se,2,NA,NA,NA,NA,NA,NA,NA,87.5,24,662,waterproof_scale,BB,125.62,scout_pro_field_scale,BB,sample label dry weight: LI2 F.S.
+2021_06_01,NA,method_1,BB,NA,maku_a,F. serratus,fucus,fucus_serratus,fu_se,3,NA,NA,NA,NA,NA,NA,NA,41.5,10,74,waterproof_scale,BB,14.25,scout_pro_field_scale,BB,sample label dry weight: LI3 F.S.
+2021_06_01,NA,method_1,BB,NA,maku_a,F. serratus,fucus,fucus_serratus,fu_se,4,NA,NA,NA,NA,NA,NA,NA,37.5,6,37,waterproof_scale,BB,7.11,sartorius_scale,BB,sample label dry weight: LI4 F.S.
+2021_06_01,NA,method_1,BB,NA,maku_a,F. serratus,fucus,fucus_serratus,fu_se,5,NA,NA,NA,NA,NA,NA,NA,34.5,5,31,waterproof_scale,BB,6.38,scout_pro_field_scale,BB,sample label dry weight: LI5 F.S.
+2021_06_01,NA,method_1,BB,NA,maku_a,F. serratus,fucus,fucus_serratus,fu_se,6,NA,NA,NA,NA,NA,NA,NA,40,5.5,30,waterproof_scale,BB,6.48,scout_pro_field_scale,BB,sample label dry weight: LI6 F.S.
+2021_06_01,NA,method_1,BB,NA,maku_a,F. serratus,fucus,fucus_serratus,fu_se,7,NA,NA,NA,NA,NA,NA,NA,28,7,19,waterproof_scale,BB,4.35,sartorius_scale,BB,sample label dry weight: LI7 F.S.
+2021_06_01,NA,method_1,BB,NA,maku_a,F. serratus,fucus,fucus_serratus,fu_se,8,NA,NA,NA,NA,NA,NA,NA,26.5,4,10,waterproof_scale,BB,2.5,scout_pro_field_scale,BB,sample label dry weight: LI8 F.S.
+2021_06_01,NA,method_1,BB,NA,maku_a,Ascophyllym,ascophyllum,ascophyllum_nodosum,as_no,1,NA,NA,NA,NA,NA,NA,NA,140,22,1272,waterproof_scale,BB,343.47,scout_pro_field_scale,BB,sample label dry weight: FS1 A.N.
+2021_06_01,NA,method_1,BB,NA,maku_a,Ascophyllym,ascophyllum,ascophyllum_nodosum,as_no,2,NA,NA,NA,NA,NA,NA,NA,50,20,461,waterproof_scale,BB,119.69,scout_pro_field_scale,BB,sample label dry weight: FS2 A.N.
+2021_06_01,NA,method_1,BB,NA,maku_a,Ascophyllym,ascophyllum,ascophyllum_nodosum,as_no,3,NA,NA,NA,NA,NA,NA,NA,71,5,57,waterproof_scale,BB,14.89,scout_pro_field_scale,BB,sample label dry weight: FS3 A.N.
+2021_06_01,NA,method_1,BB,NA,maku_a,Ascophyllym,ascophyllum,ascophyllum_nodosum,as_no,4,NA,NA,NA,NA,NA,NA,NA,80,12,183,waterproof_scale,BB,54.67,scout_pro_field_scale,BB,sample label dry weight: FS4 A.N.
+2021_06_01,NA,method_1,BB,NA,maku_a,Ascophyllym,ascophyllum,ascophyllum_nodosum,as_no,5,NA,NA,NA,NA,NA,NA,NA,48,3,19,waterproof_scale,BB,5.85,scout_pro_field_scale,BB,sample label dry weight: FS5 A.N.
+2021_06_01,NA,method_1,BB,NA,maku_a,Ascophyllym,ascophyllum,ascophyllum_nodosum,as_no,6,NA,NA,NA,NA,NA,NA,NA,62,4,32,waterproof_scale,BB,9.1,scout_pro_field_scale,BB,sample label dry weight: FS6 A.N.
+2021_06_01,NA,method_1,BB,NA,maku_a,Ascophyllym,ascophyllum,ascophyllum_nodosum,as_no,7,NA,NA,NA,NA,NA,NA,NA,62,5,46,waterproof_scale,BB,14.28,sartorius_scale,BB,sample label dry weight: FS7 A.N.
+2021_06_01,NA,method_1,BB,NA,maku_a,Ascophyllym,ascophyllum,ascophyllum_nodosum,as_no,8,NA,NA,NA,NA,NA,NA,NA,69,8,106,waterproof_scale,BB,31.76,sartorius_scale,BB,sample label dry weight: FS8 A.N.
+2021_06_01,NA,method_1,BB,NA,maku_a,Ascophyllym,ascophyllum,ascophyllum_nodosum,as_no,9,NA,NA,NA,NA,NA,NA,NA,55,11,192,waterproof_scale,BB,48.15,sartorius_scale,BB,sample label dry weight: FS9 A.N.
+2021_06_01,NA,method_1,BB,NA,maku_a,Ascophyllym,ascophyllum,ascophyllum_nodosum,as_no,10,NA,NA,NA,NA,NA,NA,NA,32,5,14,waterproof_scale,BB,4.75,scout_pro_field_scale,BB,sample label dry weight: FS10 A.N.
+2021_06_01,NA,method_1,BB,NA,maku_a,Ascophyllym,ascophyllum,ascophyllum_nodosum,as_no,11,NA,NA,NA,NA,NA,NA,NA,54,8,109,waterproof_scale,BB,30.35,scout_pro_field_scale,BB,sample label dry weight: FS11 A.N.
+2021_06_09,14h18,method_2,LG,-11,laho_c,Fucus spiralis,fucus,fucus_spiralis,fu_sp,1,"""001""",,,1,12,NA,2021_06_2021.laho_c.fu_sp.1.1,23,13,107.15,scout_pro_field_scale,LG,25.7,scout_pro_field_scale,BB,
+2021_06_09,14h20,method_2,LG,-11,laho_c,Fucus spiralis,fucus,fucus_spiralis,fu_sp,1,"""001""",,,2,11,NA,2021_06_2021.laho_c.fu_sp.1.2,10,1,1.49,scout_pro_field_scale,LG,0.48,scout_pro_field_scale,BB,
+2021_06_09,14h26,method_2,BB,-11,laho_c,Fucus spiralis,fucus,fucus_spiralis,fu_sp,1,"""001""",,,3,12,NA,2021_06_2021.laho_c.fu_sp.1.3,19.5,5,22.34,scout_pro_field_scale,LG,4.89,scout_pro_field_scale,BB,
+2021_06_09,14h27,method_2,LG,-11,laho_c,Fucus spiralis,fucus,fucus_spiralis,fu_sp,1,"""001""",,,4,0,NA,2021_06_2021.laho_c.fu_sp.1.4,56,11,173.88,scout_pro_field_scale,LG,44.4,scout_pro_field_scale,BB,
+2021_06_09,14h29,method_2,LG,-11,laho_c,Fucus vesiculosus,fucus,fucus_vesiculosus,fu_ve,1,"""001""",,,1,-7.5,NA,2021_06_2021.laho_c.fu_ve.1.1,61,7,54.34,scout_pro_field_scale,LG,14.32,scout_pro_field_scale,BB,
+2021_06_09,14h33,method_2,LG,-11,laho_c,Fucus vesiculosus,fucus,fucus_vesiculosus,fu_ve,1,"""001""",,,2,-12,NA,AA01,57,5,41.2,scout_pro_field_scale,LG,8.05,scout_pro_field_scale,BB,
+2021_06_09,14h35,method_2,LG,-11,laho_c,Fucus vesiculosus,fucus,fucus_vesiculosus,fu_ve,1,"""001""",,,3,-18,NA,AA02,64,8,53.28,scout_pro_field_scale,LG,10.79,scout_pro_field_scale,BB,
+2021_06_09,14h42,method_2,BB,-11,laho_c,Fucus vesiculosus,fucus,fucus_vesiculosus,fu_ve,2,"""002""",,,1,-8,NA,AA03,54,6,51.51,scout_pro_field_scale,LG,12.29,scout_pro_field_scale,BB,
+2021_06_09,14h44,method_2,BB,-11,laho_c,Fucus vesiculosus,fucus,fucus_vesiculosus,fu_ve,2,"""002""",,,2,-8,NA,AA04,46,4,17.08,scout_pro_field_scale,LG,3.53,scout_pro_field_scale,BB,
+2021_06_09,14h45,method_2,BB,-11,laho_c,Fucus spiralis,fucus,fucus_spiralis,fu_sp,2,"""002""",,,1,2.5,NA,AA05,29,5,45.69,scout_pro_field_scale,LG,9.14,scout_pro_field_scale,BB,sub_sample mistakenly labelled as 3 in field notes
+2021_06_09,14h47,method_2,BB,-11,laho_c,Fucus spiralis,fucus,fucus_spiralis,fu_sp,2,"""002""",,,2,-1,NA,AA06,29,5,41.46,scout_pro_field_scale,LG,9.55,scout_pro_field_scale,BB,sub_sample mistakenly labelled as 1 in field notes
+2021_06_09,14h52,method_2,BB,-11,laho_c,F. vesiculosus,fucus,fucus_vesiculosus,fu_ve,3,"""003""",,,1,-6,NA,AA07,56,9,101.08,scout_pro_field_scale,LG,21.38,scout_pro_field_scale,BB,
+2021_06_09,14h54,method_2,BB,-11,laho_c,F. vesiculosus,fucus,fucus_vesiculosus,fu_ve,3,"""003""",,,2,-5,NA,AA08,32,1,5.26,scout_pro_field_scale,LG,1.53,scout_pro_field_scale,BB,
+2021_06_09,14h56,method_2,BB,-11,laho_c,F. spiralis,fucus,fucus_spiralis,fu_sp,3,"""003""",,,1,9,NA,AA09,29,9,65.84,scout_pro_field_scale,LG,16.32,scout_pro_field_scale,BB,
+2021_06_09,14h59,method_2,BB,-11,laho_c,F. vesiculosus,fucus,fucus_vesiculosus,fu_ve,3,"""003""",,,3,-4,NA,AA10,65,12,124.28,scout_pro_field_scale,LG,24.87,scout_pro_field_scale,BB,
+2021_06_09,15h02,method_2,BB,-11,laho_c,F. spiralis,fucus,fucus_spiralis,fu_sp,3,"""003""",,,2,10,NA,AA11,13,4,7.11,scout_pro_field_scale,LG,2.97,scout_pro_field_scale,BB,
+2021_06_09,15h05,method_2,BB,-10,laho_c,F. spiralis,fucus,fucus_spiralis,fu_sp,3,"""003""",,,3,5,NA,AA12,18,5,12.22,scout_pro_field_scale,LG,3.43,scout_pro_field_scale,BB,
+2021_06_09,15h09,method_2,BB,-10,laho_c,F. spiralis,fucus,fucus_spiralis,fu_sp,4,"""004""",,,1,0,NA,AA13,24,6,34.85,scout_pro_field_scale,LG,6.66,scout_pro_field_scale,BB,
+2021_06_09,15h11,method_2,BB,-10,laho_c,F. spiralis,fucus,fucus_spiralis,fu_sp,4,"""004""",,,2,4,NA,AA14,9,0.75,1.23,scout_pro_field_scale,LG,0.46,scout_pro_field_scale,BB,
+2021_06_09,15h15,method_2,BB,-10,laho_c,F. vesiculosus,fucus,fucus_vesiculosus,fu_ve,4,"""004""",,,1,-12,NA,AA15,48,7,67.32,scout_pro_field_scale,LG,14.79,scout_pro_field_scale,BB,
+2021_06_09,15h17,method_2,BB,-10,laho_c,F. vesiculosus,fucus,fucus_vesiculosus,fu_ve,4,"""004""",,,2,-14,NA,AA16,42,1.5,40.79,scout_pro_field_scale,LG,3.2,scout_pro_field_scale,BB,wet weight dry weight ratio is a bit off
+2021_06_09,15h38,method_2,BB,-8,maku_a,F. spiralis,fucus,fucus_spiralis,fu_sp,1,"""005""",,,1,-8,NA,BB01,40,10,56.18,scout_pro_field_scale,LG,8.43,scout_pro_field_scale,BB,
+2021_06_09,15h43,method_2,LG,-7,maku_a,F. spiralis,fucus,fucus_spiralis,fu_sp,1,"""005""",,,2,2,NA,BB02,26,4,10.68,scout_pro_field_scale,LG,3.39,scout_pro_field_scale,BB,
+2021_06_09,15h46,method_2,BB,-7,maku_a,F. spiralis,fucus,fucus_spiralis,fu_sp,1,"""005""",,,3,4,NA,BB03,12,3,5.12,scout_pro_field_scale,LG,1.3,scout_pro_field_scale,BB,
+2021_06_09,15h48,method_2,LG,-6,maku_a,F. vesiculosus,fucus,fucus_vesiculosus,fu_ve,1,"""005""",,,1,-7,NA,BB04,39,4,14.3,scout_pro_field_scale,LG,2.84,scout_pro_field_scale,BB,
+2021_06_09,15h49,method_2,LG,-6,maku_a,F. vesiculosus,fucus,fucus_vesiculosus,fu_ve,1,"""005""",,,2,-5,NA,BB05,32,5,50.33,scout_pro_field_scale,LG,3.47,scout_pro_field_scale,BB,wet weight dry weight ratio is a bit off
+2021_06_09,15h43,method_2,LG,-6,maku_a,F. spiralis,fucus,fucus_spiralis,fu_sp,1,"""005""",,,4,3,NA,BB06,12,3,2.43,scout_pro_field_scale,LG,1.01,scout_pro_field_scale,BB,
+2021_06_09,15h54,method_2,BB,-6,maku_a,F. spiralis,fucus,fucus_spiralis,fu_sp,1,"""005""",,,5,4,NA,BB07,14,4,5.53,scout_pro_field_scale,LG,2.06,scout_pro_field_scale,BB,
+2021_06_09,15h57,method_2,BB,-6,maku_a,F. spiralis,fucus,fucus_spiralis,fu_sp,1,"""005""",,,6,3,NA,BB08,12,0.75,1.83,scout_pro_field_scale,LG,0.77,scout_pro_field_scale,BB,
+2021_06_11,11h38,method_2,BB,1,liho_b,F. spiralis,fucus,fucus_spiralis,fu_sp,1,"""006""",,,1,0,NA,CC01,10,4,4.33,scout_pro_field_scale,BB,0.95,scout_pro_field_scale,BB,
+2021_06_11,11h41,method_2,BB,1,liho_b,F. spiralis,fucus,fucus_spiralis,fu_sp,1,"""006""",,,2,14,NA,CC02,12,3,3.58,scout_pro_field_scale,BB,0.92,scout_pro_field_scale,BB,
+2021_06_11,11h44,method_2,BB,1,liho_b,F. spiralis,fucus,fucus_spiralis,fu_sp,1,"""006""",,,3,4,NA,CC03,16,10,64.97,scout_pro_field_scale,BB,13.09,scout_pro_field_scale,BB,
+2021_06_11,11h48,method_2,BB,1,liho_b,F. spiralis,fucus,fucus_spiralis,fu_sp,1,"""006""",,,4,15,NA,CC04,9.5,2,2.8,scout_pro_field_scale,BB,0.75,scout_pro_field_scale,BB,
+2021_06_11,11h49,method_2,BB,1,liho_b,F. spiralis,fucus,fucus_spiralis,fu_sp,1,"""006""",,,5,4,NA,CC05,22,9,72.08,scout_pro_field_scale,BB,12.7,scout_pro_field_scale,BB,
+2021_06_11,11h51,method_2,BB,1,liho_b,F. vesiculosus,fucus,fucus_vesiculosus,fu_ve,1,"""006""",,,1,-7,NA,CC06,15,6,38.31,scout_pro_field_scale,BB,7.09,scout_pro_field_scale,BB,
+2021_06_11,11h53,method_2,BB,1,liho_b,F. vesiculosus,fucus,fucus_vesiculosus,fu_ve,1,"""006""",,,2,-12,NA,CC07,36,16,363.08,scout_pro_field_scale,BB,73.58,scout_pro_field_scale,BB,
+2021_06_11,11h55,method_2,BB,1,liho_b,F. vesiculosus,fucus,fucus_vesiculosus,fu_ve,1,"""006""",,,3,-5,NA,CC08,25,6,37.7,scout_pro_field_scale,BB,9.1,scout_pro_field_scale,BB,
+2021_06_11,12h04,method_2,BB,-6,liho_b,F. vesiculosus,fucus,fucus_vesiculosus,fu_ve,2,"""007""",,,1,-13,NA,CC09,64,8,69.31,scout_pro_field_scale,BB,15.7,scout_pro_field_scale,BB,
+2021_06_11,12h06,method_2,BB,-6,liho_b,F. spiralis,fucus,fucus_spiralis,fu_sp,2,"""007""",,,1,6,NA,CC10,34,11,129.9,scout_pro_field_scale,BB,26.45,scout_pro_field_scale,BB,
+2021_06_11,12h09,method_2,BB,-6,liho_b,F. vesiculosus,fucus,fucus_vesiculosus,fu_ve,2,"""007""",,,2,-12,NA,CC11,41,7,41.81,scout_pro_field_scale,BB,9.62,scout_pro_field_scale,BB,
+2021_06_11,12h10,method_2,BB,-6,liho_b,F. spiralis,fucus,fucus_spiralis,fu_sp,2,"""007""",,,2,0,NA,CC12,25,11,97.94,scout_pro_field_scale,BB,19.27,scout_pro_field_scale,BB,
+2021_06_11,12h13,method_2,BB,-6,liho_b,F. vesiculosus,fucus,fucus_vesiculosus,fu_ve,2,"""007""",,,3,-14,NA,CC13,45,11,110.8,scout_pro_field_scale,BB,26.41,scout_pro_field_scale,BB,
+2021_06_11,12h15,method_2,BB,-6,liho_b,F. vesiculosus,fucus,fucus_vesiculosus,fu_ve,2,"""007""",,,4,-12,NA,CC14,42,17,215.72,scout_pro_field_scale,BB,35.85,scout_pro_field_scale,BB,
+2021_06_11,12h18,method_2,BB,-6,liho_b,F. spiralis,fucus,fucus_spiralis,fu_sp,2,"""007""",,,3,5,NA,CC15,25,9,73.94,scout_pro_field_scale,BB,13.47,scout_pro_field_scale,BB,
+2021_06_11,12h20,method_2,BB,-6,liho_b,F. vesiculosus,fucus,fucus_vesiculosus,fu_ve,2,"""007""",,,5,-11,NA,CC16,58,11,184.69,scout_pro_field_scale,BB,47.9,scout_pro_field_scale,BB,
+2021_06_14,9h52,method_2,LG,30,stfl_a,Ascophyllym,ascophyllum,ascophyllum_nodosum,as_no,1,"""009""",,,1,-45,NA,DD01,51,17,318.35,scout_pro_field_scale,BB,84.9,,BB,
+2021_06_14,9h57,method_2,LG,30,stfl_a,Ascophyllym,ascophyllum,ascophyllum_nodosum,as_no,1,"""009""",,,2,-50,NA,DD02,34,4,37.97,scout_pro_field_scale,BB,10.4,,BB,
+2021_06_14,10h00,method_2,LG,30,stfl_a,F. serratus,fucus,fucus_serratus,fu_se,1,"""009""",,,1,-76,NA,DD03,23,4,18.8,scout_pro_field_scale,BB,2.5,,BB,
+2021_06_14,10h01,method_2,LG,30,stfl_a,F. serratus,fucus,fucus_serratus,fu_se,1,"""009""",,,2,-80,NA,DD04,70,13,151.31,scout_pro_field_scale,BB,30.5,,BB,
+2021_06_14,10h07,method_2,LG,30,stfl_a,F. serratus,fucus,fucus_serratus,fu_se,2,"""008""",,,1,-67,NA,DD05,34,6,24.16,scout_pro_field_scale,BB,4.9,,BB,
+2021_06_14,10h10,method_2,LG,30,stfl_a,F. serratus,fucus,fucus_serratus,fu_se,2,"""008""",,,2,-73,NA,DD06,62,19,258.09,scout_pro_field_scale,BB,54.9,,BB,
+2021_06_14,10h15,method_2,LG,31,stfl_a,Ascophyllym,ascophyllum,ascophyllum_nodosum,as_no,2,"""008""",,,1,-45,NA,DD07,27,4,18.57,scout_pro_field_scale,BB,4.9,,BB,
+2021_06_14,10h19,method_2,LG,31,stfl_a,Ascophyllym,ascophyllum,ascophyllum_nodosum,as_no,2,"""008""",,,2,-46,NA,DD08,120,12,334.38,scout_pro_field_scale,BB,96,,BB,
+2021_06_14,10h28,method_2,LG,31,stfl_a,Ascophyllym,ascophyllum,ascophyllum_nodosum,as_no,3,"""010""",,,1,-53,NA,DD09,65,13,299.44,scout_pro_field_scale,BB,79.1,,BB,
+2021_06_14,10h21,method_2,LG,30,stfl_a,Ascophyllym,ascophyllum,ascophyllum_nodosum,as_no,3,"""010""",,,2,-71,NA,DD10,101,31,1195,scout_pro_field_scale,BB,286.4,,BB,
+2021_06_14,10h34,method_2,LG,30,stfl_a,F. serratus,fucus,fucus_serratus,fu_se,3,"""010""",,,1,-72,NA,DD11,56,14,204.37,scout_pro_field_scale,BB,46.4,,BB,
+2021_06_14,10h36,method_2,LG,30,stfl_a,F. serratus,fucus,fucus_serratus,fu_se,3,"""010""",,,2,-83,NA,DD12,36,8,89.45,scout_pro_field_scale,BB,16.5,,BB,
+2021_06_14,11h21,method_2,LG,29,stfl_a,Ascophyllym,ascophyllum,ascophyllum_nodosum,as_no,4,"""011""",,,1,-60,NA,DD13,49,10,160.11,scout_pro_field_scale,BB,38.4,,BB,
+2021_06_14,11h24,method_2,LG,28,stfl_a,Ascophyllym,ascophyllum,ascophyllum_nodosum,as_no,4,"""011""",,,2,-61,NA,DD14,72,11,230.81,scout_pro_field_scale,BB,60.9,,BB,
+2021_06_16,NA,method_2,LG,NA,llyn_a,Fucus vesiculosus,fucus,fucus_vesiculosus,fu_ve,1,NA,NA,NA,1,NA,NA,EE01,27,9,NA,NA,NA,5.7,,BB,
+2021_06_16,NA,method_2,BB,NA,llyn_a,Fucus vesiculosus,fucus,fucus_vesiculosus,fu_ve,2,NA,NA,NA,1,NA,NA,EE02,32,12,NA,NA,NA,16.5,,BB,
+2021_06_16,NA,method_2,LG,NA,llyn_a,Fucus vesiculosus,fucus,fucus_vesiculosus,fu_ve,3,NA,NA,NA,1,NA,NA,EE03,51,4,NA,NA,NA,5.4,,BB,
+2021_06_16,NA,method_2,BB,NA,llyn_a,Fucus vesiculosus,fucus,fucus_vesiculosus,fu_ve,4,NA,NA,NA,1,NA,NA,EE04,16,1,NA,NA,NA,0.6,,BB,
+2021_06_16,NA,method_2,LG,NA,llyn_a,Fucus vesiculosus,fucus,fucus_vesiculosus,fu_ve,5,NA,NA,NA,1,NA,NA,EE05,41,4,NA,NA,NA,2,,BB,
+2021_06_16,NA,method_2,BB,NA,llyn_a,Fucus vesiculosus,fucus,fucus_vesiculosus,fu_ve,6,NA,NA,NA,1,NA,NA,EE06,46,11,NA,NA,NA,16.5,,BB,
+2021_06_16,NA,method_2,BB,NA,llyn_a,Fucus vesiculosus,fucus,fucus_vesiculosus,fu_ve,7,NA,NA,NA,1,NA,NA,EE07,40,12,NA,NA,NA,36.6,,BB,
+2021_06_16,NA,method_2,LG,NA,llyn_a,Fucus vesiculosus,fucus,fucus_vesiculosus,fu_ve,8,NA,NA,NA,1,NA,NA,EE08,44,6,NA,NA,NA,3.7,,BB,
+2021_06_16,NA,method_2,NA,NA,saly_a,Fucus vesiculosus,fucus,fucus_vesiculosus,fu_ve,1,NA,NA,NA,1,NA,NA,EE11,42,10,NA,NA,NA,12.7,,BB,
+2021_06_16,NA,method_2,NA,NA,saly_a,Fucus vesiculosus,fucus,fucus_vesiculosus,fu_ve,2,NA,NA,NA,1,NA,NA,EE12,41,9,NA,NA,NA,5.2,,BB,
+2021_06_16,NA,method_2,NA,NA,saly_a,Fucus vesiculosus,fucus,fucus_vesiculosus,fu_ve,3,NA,NA,NA,1,NA,NA,EE13,48,11,NA,NA,NA,16.7,,BB,
+2021_06_16,NA,method_2,NA,NA,saly_a,Fucus vesiculosus,fucus,fucus_vesiculosus,fu_ve,4,NA,NA,NA,1,NA,NA,EE14,64,18,NA,NA,NA,63,,BB,
+2021_06_16,NA,method_2,NA,NA,saly_a,Fucus vesiculosus,fucus,fucus_vesiculosus,fu_ve,5,NA,NA,NA,1,NA,NA,EE15,32,9,NA,NA,NA,7,,BB,
