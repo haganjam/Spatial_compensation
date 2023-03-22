@@ -78,6 +78,15 @@ sp_sum <-
   filter(comp_level %in% c(0.1, 0.5, 0.9))
 print(sp_sum)
 
+# calculate percentage change from the mean
+sp_dat %>%
+  group_by(species_ext, depth, comp_level) %>%
+  summarise(mu_change = mean(prod_change),
+            mu_init = mean(prod_init), .groups = "drop") %>%
+  mutate(mu_perc_change = (mu_change/mu_init)*100 ) %>%
+  filter(comp_level %in% c(0.1, 0.5, 0.9)) %>%
+  View()
+
 # plot these four graphs individually for each species
 sp_code <- c("fu_sp", "fu_ve", "as_no", "fu_se")
 sp_names <- c("F. spiralis Extinct", "F. vesiculosus Extinct", "A. nodosum Extinct", "F. serratus Extinct")
@@ -94,6 +103,7 @@ ylims <- list(c(-3, 3),
               c(-3, 3),
               c(-10, 10))
 
+# get the bar size for each plot
 all_zone <- 
   lapply(ylims, function(x) {
   
