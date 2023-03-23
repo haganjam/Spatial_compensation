@@ -210,6 +210,13 @@ tab_s1 <-
   select(-model) %>%
   arrange(species, AIC)
 
+# calculate the delta AIC values
+tab_s1 <- 
+  tab_s1 %>%
+  group_by(species) %>%
+  mutate(dAIC = AIC - first(AIC)) %>%
+  ungroup()
+
 # export this table as a .csv file
 write_csv(x = tab_s1, file = "figures-tables/table_S1.csv")
 

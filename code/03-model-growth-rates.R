@@ -20,6 +20,15 @@ source("code/helper-miscellaneous.R")
 gr_dat <- read_csv("data/growth_rate_data.csv")
 head(gr_dat)
 
+# calculate the number of missing individuals
+gr_dat %>%
+  filter(site_code %in% c("X", "Y") ) %>%
+  group_by(binomial_code) %>%
+  summarise(n = n(),
+            not_NA = sum(!is.na(dry_weight_g_daily_change)),
+            n_NA = sum(is.na(dry_weight_g_daily_change)),
+            )
+
 # remove growth rate NAs
 gr_dat <- 
   gr_dat %>%
