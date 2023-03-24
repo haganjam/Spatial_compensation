@@ -16,7 +16,7 @@ source("code/helper-plotting-theme.R")
 source("code/helper-miscellaneous.R")
 
 # load the summarised transect data
-tra_dat <- readRDS(file = here("output/transect_ssdb.rds"))
+tra_dat <- readRDS(file = "output/transect_ssdb.rds")
 head(tra_dat)
 
 # copy the tra_dat that we will simulate species extinction on
@@ -168,7 +168,7 @@ p3 <-
   scale_colour_manual(values = seaweed_pal()) +
   scale_y_continuous(limits = c(-0.01, 0.02)) +
   xlab("") +
-  ylab(expression("Dry biomass change"~(g~g^{-1}~day^{-1}) )) +
+  ylab(expression("Relative growth rate"~(g~g^{-1}~day^{-1}) )) +
   ggtitle("") +
   theme_meta() +
   theme(plot.title = element_text(size = 11),

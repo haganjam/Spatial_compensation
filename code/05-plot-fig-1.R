@@ -18,6 +18,7 @@ p2 <- readRDS(file = "output/fig_1b.rds")
 p2 <- 
   p2 + 
   ggtitle("") +
+  ylab(expression("Relative growth rate"~(g~g^{-1}~day^{-1}) )) +
   theme(legend.position = "none")
 
 p3 <- readRDS(file = "output/fig_1c.rds")

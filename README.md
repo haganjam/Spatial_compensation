@@ -2,9 +2,7 @@
 
 This repository contains data and code for modelling the response of dry biomass productivity to species loss in a macroalgae system. It is associated with the following publication:
 
-+
-
-Blow Joren's mind.
++ *coming soon (hopefully)*
 
 ## data
 
