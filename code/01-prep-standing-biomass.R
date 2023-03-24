@@ -151,6 +151,43 @@ tra_dat$depth_zone <- cut(tra_dat$depth_RH2000_cm, breaks = 4, labels = 1:4)
 allo_dat <- read_csv(file = "data/allometry_data.csv")
 head(allo_dat)
 
+# check the sites from which these individuals were drawn
+tab_s1 <- 
+  allo_dat %>%
+  group_by(site_code, binomial_code) %>%
+  summarise(n = n(), .groups = "drop") %>%
+  pivot_wider(id_cols = "site_code",
+              names_from = "binomial_code",
+              values_from = "n",
+              values_fill = 0)
+
+# get the site lat-lon coordinates
+sites <- read_csv("data/site_code_coordinates.csv")
+head(sites)
+
+# get the relevant sites
+sites <- 
+  sites %>%
+  filter(site_code %in% tab_s1$site_code)
+
+# bind the latitude-longitude information to the number of individuals data
+tab_s1 <- full_join(sites, tab_s1, by = "site_code")
+
+# reorder the columns
+tab_s1 <- 
+  tab_s1 %>%
+  select(site_code, lat_dd, lon_dd, fu_sp, fu_ve, as_no, fu_se)
+
+# check whether the number of individuals is correct
+colSums(tab_s1[,c( 4, 5, 6, 7)])
+
+# rename the columns
+names(tab_s1) <- c("Site code", "Lat (DD)", "Lon (DD)", 
+                   "F. spiralis", "F. vesiculosus", "A. nodosum", "F. serratus")
+
+# export this table as a .csv file
+write_csv(x = tab_s1, file = "figures-tables/table_S1.csv")
+
 # set up the list of explanatory variables for the different models
 exp_vars <- list(c("log_length_cm", "log_circum_cm", "log_length_cm:log_circum_cm"),
                  c("log_length_cm", "log_circum_cm", "log_circum_cm2"),
@@ -192,15 +229,15 @@ lm_sp <-
 
 # generate a table for these models
 names(lm_sp) <- c("fu_sp", "fu_ve", "as_no", "fu_se")
-tab_s1 <- bind_rows(lm_sp, .id = "species")
+tab_s2 <- bind_rows(lm_sp, .id = "species")
 
 # reorder the factors
-tab_s1$species <- factor(tab_s1$species, levels = c("fu_sp", "fu_ve", "as_no", "fu_se"))
-levels(tab_s1$species) <- c("F. spiralis", "F. vesiculosus", "A. nodosum", "F. serratus")
+tab_s2$species <- factor(tab_s2$species, levels = c("fu_sp", "fu_ve", "as_no", "fu_se"))
+levels(tab_s2$species) <- c("F. spiralis", "F. vesiculosus", "A. nodosum", "F. serratus")
 
 # generate a summary table
-tab_s1 <- 
-  tab_s1 %>%
+tab_s2 <- 
+  tab_s2 %>%
   mutate(term = ifelse(term == "(Intercept)", "(Int.)", term)) %>%
   group_by(species, model) %>%
   summarise(terms = paste(term, collapse = " + "), 
@@ -211,14 +248,14 @@ tab_s1 <-
   arrange(species, AIC)
 
 # calculate the delta AIC values
-tab_s1 <- 
-  tab_s1 %>%
+tab_s2 <- 
+  tab_s2 %>%
   group_by(species) %>%
   mutate(dAIC = AIC - first(AIC)) %>%
   ungroup()
 
 # export this table as a .csv file
-write_csv(x = tab_s1, file = "figures-tables/table_S1.csv")
+write_csv(x = tab_s2, file = "figures-tables/table_S2.csv")
 
 
 # run the best models for each species
