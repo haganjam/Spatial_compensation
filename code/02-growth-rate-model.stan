@@ -1,25 +1,43 @@
 
 data{
-    vector[129] growth;
-    int depth[129];
-    int species[129];
+    int<lower=1> N;
+    int<lower=1> S_N;
+    int<lower=1> D_N;
+    vector[N] growth;
+    int depth[N];
+    int species[N];
 }
 parameters{
-    vector[4] alpha[4];
-    vector[4] mu_depth;
-    corr_matrix[4] Rho_depth;
-    vector<lower=0>[4] sigma_depth;
-    real<lower=0> sigma;
+    // standard deviation
+     real<lower=0> sigma;
+     // standard normal deviations:
+     matrix[D_N, S_N] V;
+     // parameters:
+     cholesky_factor_corr[D_N] L_Rho_v;
+     vector<lower=0>[D_N] sigma_v;
+     row_vector[D_N] vbar;
+}
+transformed parameters{
+     matrix[S_N, D_N] v;
+     matrix[S_N, D_N] vbar_mat;
+     matrix[S_N, D_N] a;
+     v = (diag_pre_multiply(sigma_v, L_Rho_v) * V)';
+     vbar_mat = rep_matrix(vbar, S_N);
+     a = v + vbar_mat;
 }
 model{
-    vector[129] mu;
+    vector[N] mu;
     sigma ~ exponential( 1 );
-    sigma_depth ~ exponential( 1 );
-    Rho_depth ~ lkj_corr( 2 );
-    mu_depth ~ normal( 0 , 1 );
-    alpha ~ multi_normal( mu_depth , quad_form_diag(Rho_depth , sigma_depth) );
+    sigma_v ~ exponential( 1 );
+    L_Rho_v ~ lkj_corr( 2 );
+    vbar ~ normal( 0 , 1 );
     for ( i in 1:129 ) {
-        mu[i] = alpha[species[i], depth[i]];
+        mu[i] = a[species[i], depth[i]];
     }
     growth ~ normal( mu , sigma );
+}
+generated quantities{
+    matrix[D_N, D_N] Rho_v;
+    Rho_v = multiply_lower_tri_self_transpose(L_Rho_v);
+
 }
