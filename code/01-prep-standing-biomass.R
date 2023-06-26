@@ -135,6 +135,27 @@ names(tra_dat)
 # check the summary
 summary(tra_dat)
 
+# depth range of each transect
+min_max_depths <- 
+  tra_dat %>%
+  group_by(transect_id) %>% 
+  summarise(min_depth_RH2000_cm = min(depth_RH2000_cm, na.rm = TRUE),
+            max_depth_RH2000_cm = max(depth_RH2000_cm, na.rm = TRUE))
+print(min_max_depths)
+
+for(i in 1:nrow(min_max_depths)) {
+  
+  x <- 
+    tra_dat %>%
+    filter(transect_id == as.character(i)) %>%
+    filter(depth_RH2000_cm == min_max_depths[i,]$min_depth_RH2000_cm |
+           depth_RH2000_cm == min_max_depths[i,]$max_depth_RH2000_cm)
+  print(x)
+  
+}
+
+  
+
 # check the depth distribution
 hist(tra_dat$depth_RH2000_cm)
 
@@ -257,13 +278,13 @@ tab_s2 <-
 # export this table as a .csv file
 write_csv(x = tab_s2, file = "figures-tables/table_S2.csv")
 
-
 # run the best models for each species
 
 # which models are best for each species?
-tab_s1 %>%
+tab_s2 %>%
   group_by(species) %>%
-  filter(AIC == min(AIC))
+  filter(AIC == min(AIC)) %>%
+  View()
 
 # F. spiralis
 
@@ -280,8 +301,12 @@ fu_sp <- lm(log_dry_weight_g ~ log_length_cm + log_circum_cm + log_circum_cm2,
 # plot(fu_sp)
 
 # check the model fit
-df1$dry_weight_pred <- exp(predict(fu_sp, data = df1))
-plot(df1$dry_weight_g, df1$dry_weight_pred)
+df1$dry_weight_pred <- exp(predict(fu_sp, data = df1)) * df1_dsf
+
+# calculate Duan's smearing factor
+df1_dsf <- mean(exp(residuals(fu_sp)))
+
+plot(df1$dry_weight_g, df1$dry_weight_pred )
 abline(a = 0, b = 1, col = "red")
 
 # F. vesiculosus
@@ -298,8 +323,11 @@ fu_ve <- lm(log_dry_weight_g ~ log_length_cm + log_circum_cm + log_circum_cm2,
 # graphical analyses of residuals
 # plot(fu_ve)
 
+# calculate Duan's smearing factor
+df2_dsf <- mean(exp(residuals(fu_ve)))
+
 # check the model fit
-df2$dry_weight_pred <- exp(predict(fu_ve, data = df2))
+df2$dry_weight_pred <- exp(predict(fu_ve, data = df2)) * df2_dsf
 plot(df2$dry_weight_g, df2$dry_weight_pred)
 abline(a = 0, b = 1, col = "red")
 
@@ -317,9 +345,12 @@ as_no <- lm(log_dry_weight_g ~ log_length_cm + log_circum_cm,
 # graphical analyses of residuals
 # plot(as_no)
 
+# calculate Duan's smearing factor
+df3_dsf <- mean(exp(residuals(as_no)))
+
 # check the model fit
-df3$dry_weight_pred <- exp(predict(as_no, data = df3))
-plot(df3$dry_weight_g, df3$dry_weight_pred)
+df3$dry_weight_pred <- exp(predict(as_no, data = df3))* df3_dsf
+plot(df3$dry_weight_g, df3$dry_weight_pred )
 abline(a = 0, b = 1, col = "red")
 
 # F. serratus
@@ -336,10 +367,33 @@ fu_se <- lm(log_dry_weight_g ~ log_length_cm + log_circum_cm,
 # graphical analyses of residuals
 # plot(fu_se)
 
+# calculate Duan's smearing factor
+df4_dsf <- mean(exp(residuals(fu_se)))
+
 # check the model fit
-df4$dry_weight_pred <- exp(predict(fu_se, data = df4))
+df4$dry_weight_pred <- exp(predict(fu_se, data = df4)) * df4_dsf 
 plot(df4$dry_weight_g, df4$dry_weight_pred)
 abline(a = 0, b = 1, col = "red")
+
+# make a table with the model coefficients: Table S3
+mod_list <- c("fu_sp", "fu_ve", "as_no", "fu_se") 
+dsf <- list(df1_dsf, df2_dsf, df3_dsf, df4_dsf)
+
+ts3_list <- vector("list", length = length(mod_list))
+for(i in 1:length(mod_list)) {
+  
+  x <- eval(parse(text = mod_list[i]))
+  y <- broom::tidy(x)
+  y[["species"]] <- mod_list[i]
+  y[["duan_smearing_factor"]] <- dsf[[i]]
+  z <- dplyr::select(y, species, term, estimate, std.error, statistic, p.value, duan_smearing_factor)
+  ts3_list[[i]] <- z
+  
+}
+tab_s3 <- bind_rows(ts3_list)
+
+# export this table as a .csv file
+write_csv(x = tab_s3, file = "figures-tables/table_S3.csv")
 
 # plot these model fits as a supplementary figure
 df_fit <- do.call("rbind", list(df1, df2, df3, df4))
@@ -359,10 +413,11 @@ p1 <-
   xlab("Observed dry weight (g)") +
   guides(colour = guide_legend(override.aes = list(size = 3.5))) +
   theme_meta() +
-  theme(legend.position = "none")
+  theme(legend.position = "none",
+        strip.background = element_blank())
 plot(p1)
 
-ggsave(filename = "figures-tables/fig_S1.png", p1, dpi = 400,
+ggsave(filename = "figures-tables/fig_S1.svg", p1,
        units = "cm", width = 15, height = 14)
 
 # calculate the average and standard deviation of the error
@@ -388,16 +443,17 @@ tra_dat <-
 # split by the binomial code
 tra_dat <- split(tra_dat, tra_dat$binomial_code)
 lm_list <- list(as_no, fu_se, fu_sp, fu_ve)
+dfs_list <- list(df1_dsf, df2_dsf, df3_dsf, df4_dsf)
 
 # predict the dry weights
 tra_dat <- 
   
-  mapply(function(x, y) {
+  mapply(function(x, y, z) {
   
-  x[["dry_mass_g"]] <- exp(predict(object = y, x))
+  x[["dry_mass_g"]] <- exp(predict(object = y, x)) * z
   return(x)
   
-}, tra_dat, lm_list, SIMPLIFY = FALSE)
+}, tra_dat, lm_list, dfs_list, SIMPLIFY = FALSE)
 
 # bind back into a data.frame
 tra_dat <- bind_rows(tra_dat)
