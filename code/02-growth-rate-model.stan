@@ -39,5 +39,4 @@ model{
 generated quantities{
     matrix[D_N, D_N] Rho_v;
     Rho_v = multiply_lower_tri_self_transpose(L_Rho_v);
-
 }

@@ -50,7 +50,7 @@ ggplot(data = gr_dat,
   theme_classic()
 
 # compile the stan growth rate model
-m1 <- stan_model("code/02-growth-rate-model.stan")
+m1 <- rstan::stan_model("code/02-growth-rate-model.stan")
 
 # create a list with the relevant data
 dat_sp <- list(species = as.integer(factor(gr_dat$binomial_code)),
