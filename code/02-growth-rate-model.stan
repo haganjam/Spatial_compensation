@@ -29,7 +29,8 @@ model{
     vector[N] mu;
     sigma ~ exponential( 1 );
     sigma_v ~ exponential( 1 );
-    L_Rho_v ~ lkj_corr( 2 );
+    L_Rho_v ~ lkj_corr_cholesky( 2 );
+    to_vector(V) ~ normal( 0 , 1 );
     vbar ~ normal( 0 , 1 );
     for ( i in 1:129 ) {
         mu[i] = a[species[i], depth[i]];

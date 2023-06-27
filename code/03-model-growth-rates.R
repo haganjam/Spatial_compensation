@@ -51,21 +51,25 @@ ggplot(data = gr_dat,
 
 # compile the stan growth rate model
 m1 <- rstan::stan_model("code/02-growth-rate-model.stan")
+print(m1)
 
 # create a list with the relevant data
 dat_sp <- list(species = as.integer(factor(gr_dat$binomial_code)),
                depth = as.integer(factor(gr_dat$depth_treatment)),
-               growth = gr_dat$dry_weight_g_daily_change)
+               growth = gr_dat$dry_weight_g_daily_change,
+               N = nrow(gr_dat),
+               D_N = length(unique(gr_dat$depth_treatment)),
+               S_N = length(unique(gr_dat$binomial_code)))
 
 # sample the stan model: m1
 m1_fit <- rstan::sampling(m1, data = dat_sp, 
-                          iter = 1000, chains = 4, algorithm = c("NUTS"),
+                          iter = 1500, chains = 4, algorithm = c("NUTS"),
                           control = list(adapt_delta = 0.99),
                           seed = 54856)
 
 # check the traceplots and rhat values to assess convergence
 print(m1_fit)
-traceplot(m1_fit, pars = c("alpha") )
+traceplot(m1_fit, pars = c("a") )
 
 # extract the samples from the estiamted posterior distribution
 m1_post <- rstan::extract(m1_fit)
@@ -73,7 +77,7 @@ m1_post <- rstan::extract(m1_fit)
 # check the fit of the model to the observed data
 
 # extract the relevant parameters
-alpha <- m1_post$alpha 
+alpha <- m1_post$a
 
 # get predictions from the model for the data
 pred_list <- vector("list", length = length(m1_post$sigma))
