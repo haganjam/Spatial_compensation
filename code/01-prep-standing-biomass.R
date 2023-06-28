@@ -159,6 +159,10 @@ for(i in 1:nrow(min_max_depths)) {
 # check the depth distribution
 hist(tra_dat$depth_RH2000_cm)
 
+# check the minimum and maximum algal lengths
+summary(tra_dat$length_cm)
+
+
 # add a depth zone variable
 
 # check the depths of the cut variable

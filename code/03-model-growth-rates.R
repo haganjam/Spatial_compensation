@@ -63,15 +63,77 @@ dat_sp <- list(species = as.integer(factor(gr_dat$binomial_code)),
 
 # sample the stan model: m1
 m1_fit <- rstan::sampling(m1, data = dat_sp, 
-                          iter = 1500, chains = 4, algorithm = c("NUTS"),
+                          iter = 1000, chains = 4, algorithm = c("NUTS"),
                           control = list(adapt_delta = 0.99),
                           seed = 54856)
 
 # check the traceplots and rhat values to assess convergence
 print(m1_fit)
-traceplot(m1_fit, pars = c("a") )
 
-# extract the samples from the estiamted posterior distribution
+# export the traceplots
+
+# get a vector of parameters
+pars <- m1_fit@model_pars 
+pars <- pars[-length(pars)]
+pars <- pars[pars != "vbar_mat"]
+
+# get the parameter dimensions
+par_dims <- m1_fit@par_dims
+par_dims <- par_dims[-length(par_dims)]
+par_dims <- par_dims[names(par_dims) != "vbar_mat"]
+par_dims <- lapply(par_dims, function(x) if(sum(x) == 0) { 1 } else {x} )
+par_dims <- lapply(par_dims, function(x) if(length(x) == 1 && x == 4) {c(2, 2)} else {x} )
+
+# loop over each parameter
+for(i in pars) {
+  
+  # generate the traceplot
+  TP <- traceplot(m1_fit, pars = i )
+  
+  # get the correct plot dimensions
+  w <- par_dims[[i]][1]
+  h <- if( length(par_dims[[i]]) > 1) {
+    par_dims[[i]][2]
+  } else {
+    1
+  }
+  
+  # sigma plot needs to be wider
+  if(i == "sigma") {
+    w <- 1.5
+  }
+  
+  # export the traceplot
+  ggsave(filename = paste0("figures-tables/", paste0("TP_",i, ".svg")), 
+         TP, 
+         units = "cm", width = (5*w), height = (4.5*h))
+  
+}
+
+# generate diagnostic information output
+m1_sum <- summary(m1_fit)
+
+# convert to tibble and add parameter names
+tab_s4 <- as_tibble(m1_sum$summary)
+tab_s4 <- bind_cols(tibble(parameter = row.names(m1_sum$summary)),
+                    tab_s4)
+
+# select relevant columns
+tab_s4 <- select(tab_s4, parameter, mean, sd, n_eff, Rhat)
+
+# rename the columns
+names(tab_s4) <- c("Parameter", "Mean", "SD", "Effective number of samples", "R-hat")
+
+# remove the final row
+tab_s4 <- tab_s4[-nrow(tab_s4),]
+
+# remove the vbar_mat parameter as these are only for calculation purposes
+tab_s4 <- filter(tab_s4, !grepl(pattern = "vbar_mat", Parameter) )
+
+# export this table as a .csv file
+write_csv(x = tab_s4, file = "figures-tables/table_S4.csv")
+
+# extract the samples from the estimated posterior distribution
 m1_post <- rstan::extract(m1_fit)
 
 # check the fit of the model to the observed data
