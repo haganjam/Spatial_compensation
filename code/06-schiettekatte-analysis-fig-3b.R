@@ -63,7 +63,10 @@ summary(prop_sp_dom$prop_sp_dom)
 m_sd <- 
   prop_sp_dom %>%
   summarise(m = mean(prop_sp_dom),
-            sd = sd(prop_sp_dom))
+            sd = sd(prop_sp_dom),
+            PI_low = quantile(prop_sp_dom, 0.05),
+            PI_high = quantile(prop_sp_dom, 0.95))
+print(m_sd)
 
 # check the summary statistics
 summary(prop_sp_dom)
