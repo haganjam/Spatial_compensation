@@ -166,11 +166,27 @@ summary(tra_dat$length_cm)
 # add a depth zone variable
 
 # check the depths of the cut variable
-cut(tra_dat$depth_RH2000_cm, breaks = 4)
+range(tra_dat$depth_RH2000_cm)
 
-# midpoints of these depth zones are: -44, -32, -20, -8
-tra_dat$depth_zone <- cut(tra_dat$depth_RH2000_cm, breaks = 4, labels = 1:4)
+# cut into the following depth zones:
+# dz1 = -2 ; -10
+# dz2 = -12 ; -20
+# dz3 = -22 ; -30
+# dz4 = -32 ; -40
 
+tra_dat$depth_zone <- 
+  with(tra_dat, 
+     ifelse(depth_RH2000_cm <= -2 & depth_RH2000_cm >= -10, 1, 
+       ifelse(depth_RH2000_cm <= -12 & depth_RH2000_cm >= -20, 2, 
+              ifelse(depth_RH2000_cm <= -22 & depth_RH2000_cm >= -30, 3,
+                     ifelse(depth_RH2000_cm <= -32 & depth_RH2000_cm >= -40, 4, 0)  ))) 
+     )
+
+# remove the points that do not fall in these depth zones
+tra_dat <- filter(tra_dat, depth_zone != 0)
+
+# convert the depth zone to a factor
+tra_dat$depth_zone <- factor(tra_dat$depth_zone)
 
 # load the allometry data
 allo_dat <- read_csv(file = "data/allometry_data.csv")
@@ -287,8 +303,7 @@ write_csv(x = tab_s2, file = "figures-tables/table_S2.csv")
 # which models are best for each species?
 tab_s2 %>%
   group_by(species) %>%
-  filter(AIC == min(AIC)) %>%
-  View()
+  filter(AIC == min(AIC))
 
 # F. spiralis
 
@@ -304,11 +319,11 @@ fu_sp <- lm(log_dry_weight_g ~ log_length_cm + log_circum_cm + log_circum_cm2,
 # graphical analyses of residuals
 # plot(fu_sp)
 
-# check the model fit
-df1$dry_weight_pred <- exp(predict(fu_sp, data = df1)) * df1_dsf
-
 # calculate Duan's smearing factor
 df1_dsf <- mean(exp(residuals(fu_sp)))
+
+# check the model fit
+df1$dry_weight_pred <- exp(predict(fu_sp, data = df1)) * df1_dsf
 
 plot(df1$dry_weight_g, df1$dry_weight_pred )
 abline(a = 0, b = 1, col = "red")
@@ -332,6 +347,7 @@ df2_dsf <- mean(exp(residuals(fu_ve)))
 
 # check the model fit
 df2$dry_weight_pred <- exp(predict(fu_ve, data = df2)) * df2_dsf
+
 plot(df2$dry_weight_g, df2$dry_weight_pred)
 abline(a = 0, b = 1, col = "red")
 
@@ -354,6 +370,7 @@ df3_dsf <- mean(exp(residuals(as_no)))
 
 # check the model fit
 df3$dry_weight_pred <- exp(predict(as_no, data = df3))* df3_dsf
+
 plot(df3$dry_weight_g, df3$dry_weight_pred )
 abline(a = 0, b = 1, col = "red")
 
@@ -376,6 +393,7 @@ df4_dsf <- mean(exp(residuals(fu_se)))
 
 # check the model fit
 df4$dry_weight_pred <- exp(predict(fu_se, data = df4)) * df4_dsf 
+
 plot(df4$dry_weight_g, df4$dry_weight_pred)
 abline(a = 0, b = 1, col = "red")
 
@@ -515,8 +533,7 @@ tra_plot$species <- factor(tra_plot$species,
 
 # modify the depth zone factor
 tra_plot$depth <- factor(tra_plot$depth)
-levels(tra_plot$depth) <- paste0("DZ", c("4", "3", "2", "1"))
-tra_plot$depth <- factor(tra_plot$depth, levels = paste0("DZ", c("1", "2", "3", "4")) )
+levels(tra_plot$depth) <- paste0("DZ", c("1", "2", "3", "4"))
 
 p2 <- 
   ggplot(data = tra_plot,
@@ -526,7 +543,7 @@ p2 <-
   # scale_fill_viridis_d(option = "A", end = 0.9) +
   scale_fill_manual(values = seaweed_pal()) +
   ylab("Standing dry biomass (g)") +
-  scale_y_continuous(expand = c(0, 0), limits = c(0, 575)) +
+  scale_y_continuous(expand = c(0, 0), limits = c(0, 420)) +
   xlab("") +
   labs(fill = "Species") +
   theme_meta() +
