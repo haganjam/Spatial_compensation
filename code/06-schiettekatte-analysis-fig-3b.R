@@ -65,30 +65,35 @@ m_sd <-
   summarise(m = mean(prop_sp_dom),
             sd = sd(prop_sp_dom))
 
-# get a decent red colour
-col_pal <- wesanderson::wes_palette(name = "Darjeeling1", n = 1)
+# check the summary statistics
+summary(prop_sp_dom)
 
-ggplot() +
-  geom_histogram(data = prop_sp_dom,
-                 mapping = aes(x = prop_sp_dom), 
-                 bins = 20, fill = col_pal, colour = col_pal) +
+# summarise the prop_sp_dom data into a histogram dataset
+prop_sp_dom <- 
+  prop_sp_dom %>%
+  group_by(prop_sp_dom) %>%
+  summarise(n = n())
+
+p1 <- 
+  ggplot() +
+  geom_col(data = prop_sp_dom,
+           mapping = aes(x = prop_sp_dom, y = n),
+           width = 0.075, fill = "darkgrey", colour = "black") +
   geom_point(data = m_sd,
-             mapping = aes(x = m, y = 1100), size = 2,
-             colour = col_pal) +
+             mapping = aes(x = m, y = 1700), size = 2,
+             colour = "black") +
   geom_errorbarh(data = m_sd,
-                mapping = aes(xmin = m-sd, xmax = m+sd, y = 1100),
-                height = 0, colour = col_pal) +
-  scale_x_continuous(limits = c(-0.1, 1.1), breaks = seq(0, 1, 0.25)) +
-  scale_y_continuous(expand = c(0, 0), limits = c(0, 1200),
-                     breaks = seq(0, 1200, 200)) +
+                mapping = aes(xmin = m-sd, xmax = m+sd, y = 1700),
+                height = 0, colour = "black") +
+  scale_x_continuous(limits = c(0, 1.1), breaks = seq(0, 1, 0.25)) +
+  scale_y_continuous(expand = c(0, 0), limits = c(0, 1800),
+                     breaks = seq(0, 1600, 400)) +
   ylab("Number of samples") +
   xlab("Proportion of species being dominant") +
   theme_meta()
-  
+plot(p1)
 
+# output as a .rds object
+saveRDS(p1, "output/fig_3b.rds")  
 
-
-
-
-
-
+### END

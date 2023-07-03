@@ -150,6 +150,9 @@ sp_pool_lev <-
          Thresh. = as.character(threshold))
 print(sp_pool_lev)
 
+# get a colour palette
+col_pal <- wesanderson::wes_palette(name = "Darjeeling1", n = 3)
+
 # plot number of sites and richness required
 p1 <- 
   ggplot(data = sp_pool_lev) +
@@ -162,18 +165,18 @@ p1 <-
                               ymax = richness_required_m+richness_required_sd,
                               colour = Thresh.),
                 width = 0, show.legend = FALSE, position = position_dodge(0.25)) +
-  scale_colour_viridis_d(option = "E", end = 0.9) +
+  scale_colour_manual(values = col_pal) +
   guides(colour = guide_legend(override.aes = list(shape = 16, size = 4))) +
   ylab("Number of species required") +
   xlab("Number of depth zones") +
   scale_x_continuous(limits = c(0.8, 4.2)) +
-  ggtitle("Fucoid macroalgae data") +
   theme_meta() +
-  theme(legend.key = element_rect(fill = NA),
+  theme(legend.position = "top",
+        legend.key = element_rect(fill = NA),
         plot.title = element_text(hjust = 0.5, vjust = 2.5))
 plot(p1)
 
-ggsave(filename = "figures-tables/fig_2.png", p1, dpi = 400,
-       units = "cm", width = 13, height = 8)
+# output as a .rds object
+saveRDS(p1, "output/fig_3a.rds")
 
 ### END
