@@ -26,7 +26,7 @@ tra_ext <- tra_dat
 grow_dat_list <- readRDS(file = "output/model_growth_rates.rds")
 
 # get a random sample of growth rates
-grow_dat <- grow_dat_list[[900]]
+grow_dat <- grow_dat_list[[500]]
 head(grow_dat)
 
 # choose a species to go extinct
@@ -102,7 +102,7 @@ for(i in 1:length(fig_list)) {
                              c("F. spiralis", "F. vesiculosus", "A. nodosum", "F. serratus"))
   
   # change the levels of the depth factor
-  tra_plot$depth <- factor(tra_plot$depth, levels = c("4", "3", "2", "1"))
+  tra_plot$depth <- factor(tra_plot$depth)
   levels(tra_plot$depth) <- paste0("DZ", c("1", "2", "3", "4"))
   
   p1 <- 
@@ -152,7 +152,7 @@ grow_plot$species <- factor(grow_plot$species,
 levels(grow_plot$species) <- c("F. spiralis", "F. vesiculosus", "A. nodosum", "F. serratus")
 
 # change the levels of the depth factor
-grow_plot$depth <- factor(grow_plot$depth, levels = c("4", "3", "2", "1"))
+grow_plot$depth <- factor(grow_plot$depth)
 levels(grow_plot$depth) <-  paste0("DZ", c("1", "2", "3", "4"))
 
 p3 <- 
@@ -164,9 +164,8 @@ p3 <-
   geom_line(data = grow_plot,
             mapping = aes(x = as.integer(depth), y=growth_rate, colour = species),
             position = position_dodge(0.25), show.legend = FALSE) +
-  # scale_colour_viridis_d(option = "A", end = 0.9) +
   scale_colour_manual(values = seaweed_pal()) +
-  scale_y_continuous(limits = c(-0.01, 0.02)) +
+  # scale_y_continuous(limits = c(-0.01, 0.02)) +
   xlab("") +
   ylab(expression("Relative growth rate"~(g~g^{-1}~day^{-1}) )) +
   ggtitle("") +
@@ -223,7 +222,7 @@ prod_sum <-
   summarise(prod_sum = sum(prod))
 
 # change the levels of the depth factor
-prod_sum$depth <- factor(prod_sum$depth, levels = c("4", "3", "2", "1"))
+prod_sum$depth <- factor(prod_sum$depth)
 levels(prod_sum$depth) <-  paste0("DZ", c("1", "2", "3", "4"))
 
 p4 <- 
@@ -252,7 +251,7 @@ p1234 <- plot_grid(p1, p2, p3, p4, nrow = 2, ncol = 2, align = "v",
                    labels = c("a", "b", "c", "d"), label_size = 11,
                    label_fontface = "plain")
 
-ggsave(filename = "figures-tables/fig_3.png", p1234, dpi = 400,
+ggsave(filename = "figures-tables/fig_2.svg", p1234,
        units = "cm", width = 20, height = 18)
 
 ### END

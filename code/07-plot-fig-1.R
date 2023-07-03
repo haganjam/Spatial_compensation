@@ -33,7 +33,7 @@ p123 <- plot_grid(p1, p2, p3, nrow = 2, ncol = 2, align = "v",
                   label_fontface = "plain")
 plot(p123)
 
-ggsave(filename = "figures-tables/fig_1.png", p123, dpi = 400,
+ggsave(filename = "figures-tables/fig_1.svg", p123,
        units = "cm", width = 20, height = 18)
 
 ### END
