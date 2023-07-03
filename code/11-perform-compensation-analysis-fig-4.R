@@ -1,8 +1,12 @@
-
-# Analyse the compensation data
+#' @title: analyse the counterfactual compensation scenarios
+#' 
+#' @description: this script analyses the data generated from the counterfactual
+#' simulations of species loss and species compensation
+#' 
 
 # load relevant libraries
 library(dplyr)
+library(readr)
 library(ggplot2)
 library(ggbeeswarm)
 library(ggpubr)
@@ -47,7 +51,7 @@ sp_dat <-
 summary(sp_dat)
 
 # change the factor levels of depth
-sp_dat$depth <- factor(sp_dat$depth, levels = c("4", "3", "2", "1", "All"))
+sp_dat$depth <- factor(sp_dat$depth)
 levels(sp_dat$depth) <- c(paste0("DZ", c("1", "2", "3", "4")), "All")
 
 # check the summary data
@@ -79,13 +83,57 @@ sp_sum <-
 print(sp_sum)
 
 # calculate percentage change from the mean
-sp_dat %>%
+sp_PPE <- 
+  sp_dat %>%
   group_by(species_ext, depth, comp_level) %>%
-  summarise(mu_change = mean(prod_change),
-            mu_init = mean(prod_init), .groups = "drop") %>%
-  mutate(mu_perc_change = (mu_change/mu_init)*100 ) %>%
-  filter(comp_level %in% c(0.1, 0.5, 0.9)) %>%
-  View()
+  mutate(perc_change = (prod_change/prod_init)*100 ) %>%
+  summarise(mu_change = mean(perc_change),
+            PI_low = quantile(perc_change, 0.05),
+            PI_high = quantile(perc_change, 0.95), .groups = "drop") %>%
+  filter(comp_level %in% c(0.1, 0.5, 0.9))
+View(sp_PPE)
+
+# generate summary tables: table 1 and table S5
+
+# generate a supplementary table with the rest of the percentage changes
+tab_sum <- 
+  sp_PPE %>%
+  mutate(mu_and_PI = paste0(round(mu_change, 1), " [",
+                            round(PI_low, 1), " - (",
+                            round(PI_high, 1), ")]" )) %>%
+  select(species_ext, depth, comp_level, mu_and_PI) %>%
+  pivot_wider(id_cols = c("species_ext", "depth"),
+              names_from = "comp_level",
+              values_from = "mu_and_PI")
+print(tab_sum)
+
+# rename the columns
+names(tab_sum) <- c("Species extinct", "Depth zone", "10% compensation", "50% compensation", "90% compensation")
+
+# reorder the rows
+tab_sum$`Species extinct` <- factor(tab_sum$`Species extinct`, levels = c("fu_sp", "fu_ve", "as_no", "fu_se"))
+levels(tab_sum$`Species extinct`) <- c("F. spiralis", "F. vesiculosus", "A. nodosum", "F. serratus")
+
+# arrange and rename the species from their binomial codes
+tab_sum <- arrange(tab_sum, `Species extinct`)
+
+# table 1: main text
+tab_1 <- 
+  tab_sum %>%
+  filter(`Depth zone` == "All") %>%
+  select(-`Depth zone`)
+
+# export this table to a .csv file
+write_csv(x = tab_1, file = "figures-tables/table_1.csv")
+
+# table S5: supplementary information
+tab_s5 <- 
+  tab_sum %>%
+  filter(`Depth zone` != "All")
+
+# export this table to a .csv file
+write_csv(x = tab_s5, file = "figures-tables/table_S5.csv")
+
 
 # plot these four graphs individually for each species
 sp_code <- c("fu_sp", "fu_ve", "as_no", "fu_se")
@@ -99,9 +147,9 @@ x.text.size <- c(1, 1, 12, 12)
 
 # set the ylims for the different species
 ylims <- list(c(-3, 3),
-              c(-5.5, 3),
+              c(-3.5, 3),
               c(-3, 3),
-              c(-10, 10))
+              c(-6, 6))
 
 # get the bar size for each plot
 all_zone <- 
@@ -113,6 +161,10 @@ all_zone <-
   return(v)
   
 })
+
+# get a colour palette
+col_pal <- wesanderson::wes_palette(name = "Royal1", n = 4, type = "discrete")
+col_pal <- col_pal[c(1,2,4)]
 
 plots <- vector("list", length = length(sp_code))
 for(i in 1:length(sp_code)) {
@@ -145,7 +197,7 @@ for(i in 1:length(sp_code)) {
     geom_point(data = sp_sum %>% filter(species_ext == sp_code[i]),
                mapping = aes(x = depth, y = mu, colour = comp_level), 
                position = position_dodge(0.8), shape = 18, size = 3.5) +
-    scale_colour_viridis_d(option = "A", end = 0.9) +
+    scale_colour_manual(values = col_pal) +
     ylab(ylabs[i]) +
     xlab(xlabs[[i]]) +
     ggtitle(label = sp_names[i]) +
@@ -175,7 +227,7 @@ p1 <-
             heights = c(1, 1.2))
 plot(p1)
 
-ggsave(filename = "figures-tables/fig_4.png", p1, dpi = 400,
+ggsave(filename = "figures-tables/fig_4.svg", p1,
        units = "cm", width = 20, height = 18)
 
 ### END

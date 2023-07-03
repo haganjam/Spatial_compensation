@@ -151,7 +151,7 @@ sp_pool_lev <-
 print(sp_pool_lev)
 
 # get a colour palette
-col_pal <- wesanderson::wes_palette(name = "Darjeeling1", n = 3)
+col_pal <- gray.colors(3, start = 0.2, end = 0.8, rev = TRUE)
 
 # plot number of sites and richness required
 p1 <- 
