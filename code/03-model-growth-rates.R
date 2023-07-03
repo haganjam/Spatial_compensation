@@ -55,7 +55,7 @@ print(m1)
 
 # create a list with the relevant data
 dat_sp <- list(species = as.integer(factor(gr_dat$binomial_code)),
-               depth = as.integer(factor(gr_dat$depth_treatment)),
+               depth = as.integer(factor(-1*gr_dat$depth_treatment)),
                growth = gr_dat$dry_weight_g_daily_change,
                N = nrow(gr_dat),
                D_N = length(unique(gr_dat$depth_treatment)),
@@ -63,7 +63,7 @@ dat_sp <- list(species = as.integer(factor(gr_dat$binomial_code)),
 
 # sample the stan model: m1
 m1_fit <- rstan::sampling(m1, data = dat_sp, 
-                          iter = 1000, chains = 4, algorithm = c("NUTS"),
+                          iter = 1500, chains = 4, algorithm = c("NUTS"),
                           control = list(adapt_delta = 0.99),
                           seed = 54856)
 
@@ -261,7 +261,7 @@ gr_dat$species <- factor(gr_dat$binomial_code, levels = c("fu_sp", "fu_ve", "as_
 
 # df_pred
 df_pred_plot <- df_pred
-df_pred_plot$depth <- factor(df_pred_plot$depth, levels = c("4", "3", "2", "1"))
+df_pred_plot$depth <- factor(df_pred_plot$depth)
 levels(df_pred_plot$depth) <- paste0("DZ", c("1", "2", "3", "4"))
 
 # raw data gr_dat

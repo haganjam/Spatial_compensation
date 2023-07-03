@@ -14,38 +14,12 @@ library(ggplot2)
 source("code/helper-plotting-theme.R")
 source("code/helper-miscellaneous.R")
 
-# load the summarised transect data
-tra_dat <- readRDS(file = "output/transect_ssdb.rds")
-head(tra_dat)
-
-# load the growth rate data
-grow_dat_list <- readRDS(file = "output/model_growth_rates.rds")
-
-# calculate raw productivity for each sample of growth rates
-prod_raw <- 
-  
-  lapply(grow_dat_list, function(grow_dat) {
-    
-    # convert biomass to productivity units
-    prodx <- 
-      mapply(function(ssdb, growth_rates){ 
-        
-        # multiply the standing stock dry biomass (ssdb) by the relative growth rates
-        ssdb*growth_rates
-        
-      }, 
-      tra_dat[,-1], grow_dat[,-1] )
-    
-    # add a depth zone variable back to the data
-    prodx <- cbind(data.frame(depth_zone = as.character(1:4)), as.data.frame(prodx))
-    
-    return(prodx) 
-    
-  })
+# load the productivity data
+prod_list <- readRDS("output/model_productivity.rds")
 
 # plot the raw productivity across depth zones integrated across growth rates
 prod <- 
-  bind_rows(prod_raw, .id = "sample_gr") %>%
+  bind_rows(prod_list, .id = "sample_gr") %>%
   pivot_longer(cols = c("fu_se", "as_no", "fu_ve", "fu_sp"),
                names_to = "species",
                values_to = "prod")
