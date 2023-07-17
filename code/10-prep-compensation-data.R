@@ -4,6 +4,12 @@
 #' each depth zone assuming that each species has been lost individually.
 #' 
 
+# clear environment
+rm(list = ls())
+
+# set a seed
+set.seed(490527)
+
 # load relevant libraries
 library(dplyr)
 

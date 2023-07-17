@@ -4,6 +4,12 @@
 #' simulations of species loss and species compensation
 #' 
 
+# clear environment
+rm(list = ls())
+
+# set a seed
+set.seed(4679476)
+
 # load relevant libraries
 library(dplyr)
 library(readr)
