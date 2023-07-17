@@ -5,6 +5,9 @@
 #' species loss under different compensation scenarios.
 #' 
 
+# clear environment
+rm(list = ls())
+
 # load relevant libraries
 library(dplyr)
 library(tidyr)
@@ -26,7 +29,7 @@ tra_ext <- tra_dat
 grow_dat_list <- readRDS(file = "output/model_growth_rates.rds")
 
 # get a random sample of growth rates
-grow_dat <- grow_dat_list[[94]]
+grow_dat <- grow_dat_list[[1165]]
 head(grow_dat)
 
 # choose a species to go extinct

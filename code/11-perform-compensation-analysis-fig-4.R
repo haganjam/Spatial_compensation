@@ -226,7 +226,7 @@ p1 <-
                     common.legend = TRUE, legend = "bottom",
                     labels = c("a", "b", "c", "d"),
                     font.label = list(face = "plain", size = 11),
-                    heights = c(1, 1.2))
+                    heights = c(1, 1.25))
 plot(p1)
 
 ggsave(filename = "figures-tables/fig_4.svg", p1,

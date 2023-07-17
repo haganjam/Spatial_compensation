@@ -5,6 +5,9 @@
 #' ecosystem functioning across different sites
 #' 
 
+# clear environment
+rm(list = ls())
+
 # load relevant libraries
 library(dplyr)
 library(readr)

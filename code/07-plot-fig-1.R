@@ -4,6 +4,9 @@
 #' scripts and plots fig 1 from the manuscript.
 #' 
 
+# clear environment
+rm(list = ls())
+
 # load relevant libraries
 library(ggplot2)
 library(cowplot)
@@ -28,9 +31,10 @@ p3 <-
   theme(legend.position = "none")
 
 # ggarrange the plots to keep the common legend
-p123 <- plot_grid(p1, p2, p3, nrow = 2, ncol = 2, align = "v",
-                  labels = c("a", "b", "c"), label_size = 11,
-                  label_fontface = "plain")
+p123 <- cowplot::plot_grid(p1, p2, p3, nrow = 2, ncol = 2, align = "v",
+                           labels = c("a", "b", "c"), label_size = 11,
+                           label_fontface = "plain"
+                            )
 plot(p123)
 
 ggsave(filename = "figures-tables/fig_1.svg", p123,

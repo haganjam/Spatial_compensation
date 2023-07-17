@@ -5,6 +5,9 @@
 #' different depth zones.
 #' 
 
+# clear environment
+rm(list = ls())
+
 # load relevant libraries
 library(dplyr)
 library(readr)

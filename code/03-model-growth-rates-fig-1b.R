@@ -5,6 +5,9 @@
 #' different depth zones.
 #' 
 
+# clear environment
+rm(list = ls())
+
 # load relevant libraries
 library(dplyr)
 library(tidyr)
@@ -17,7 +20,7 @@ source("code/helper-plotting-theme.R")
 source("code/helper-miscellaneous.R")
 
 # load the growth rate data
-gr_dat <- read_csv("data/growth_rate_data.csv")
+gr_dat <- readr::read_csv("data/growth_rate_data.csv")
 head(gr_dat)
 
 # calculate the number of missing individuals

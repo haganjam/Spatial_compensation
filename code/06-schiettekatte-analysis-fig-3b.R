@@ -4,6 +4,9 @@
 #' al.'s (2022) method for calculating the the proportion of dominant species
 #' at different sites
 
+# clear environment
+rm(list = ls())
+
 # load relevant libraries
 library(dplyr)
 library(tidyr)
