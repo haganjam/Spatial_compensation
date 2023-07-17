@@ -26,7 +26,7 @@ tra_ext <- tra_dat
 grow_dat_list <- readRDS(file = "output/model_growth_rates.rds")
 
 # get a random sample of growth rates
-grow_dat <- grow_dat_list[[500]]
+grow_dat <- grow_dat_list[[94]]
 head(grow_dat)
 
 # choose a species to go extinct
@@ -61,7 +61,7 @@ for(dz in 1:nrow(grow_dat)) {
   sp_ssb <- names(x_ssb)[apply(x_ssb, 2, function(x) any(x > 0))]
 
   # get intersecting species i.e. positive growth and adjacent zone
-  sp_comp <- intersect(sp_grow, sp_ssb)
+  sp_comp <- dplyr::intersect(sp_grow, sp_ssb)
   
   # if there is more than one suitable species, we sample one randomly
   if( length(sp_comp) > 0 ) {
@@ -88,14 +88,14 @@ for(i in 1:length(fig_list)) {
   
   # plot a figure of the depth distribution
   tra_plot <- 
-    dat_list[[i]] %>%
-    rename(`F. serratus` = "fu_se",
-           `A. nodosum` = "as_no",
-           `F. vesiculosus` = "fu_ve",
-           `F. spiralis` = "fu_sp") %>%
-    pivot_longer(cols = c(`F. serratus`, `A. nodosum`, `F. vesiculosus`, `F. spiralis`),
-                 names_to = "species", 
-                 values_to = "biomass")
+    dat_list[[i]] |>
+    dplyr::rename(`F. serratus` = "fu_se",
+                  `A. nodosum` = "as_no",
+                  `F. vesiculosus` = "fu_ve",
+                  `F. spiralis` = "fu_sp") |>
+    tidyr::pivot_longer(cols = c(`F. serratus`, `A. nodosum`, `F. vesiculosus`, `F. spiralis`),
+                        names_to = "species", 
+                        values_to = "biomass")
   
   # change levels of the factor
   tra_plot$species <- factor(tra_plot$species,
@@ -103,7 +103,7 @@ for(i in 1:length(fig_list)) {
   
   # change the levels of the depth factor
   tra_plot$depth <- factor(tra_plot$depth)
-  levels(tra_plot$depth) <- paste0("DZ", c("1", "2", "3", "4"))
+  levels(tra_plot$depth) <- c("1", "2", "3", "4")
   
   p1 <- 
     ggplot(data = tra_plot,
@@ -141,10 +141,10 @@ plot(p2)
 
 # plot a single sample from the growth rate data
 grow_plot <- 
-  grow_dat %>%
-  pivot_longer(cols = c("fu_se", "as_no", "fu_ve",  "fu_sp"),
-               names_to = "species",
-               values_to = "growth_rate")
+  grow_dat |>
+  tidyr::pivot_longer(cols = c("fu_se", "as_no", "fu_ve",  "fu_sp"),
+                      names_to = "species",
+                      values_to = "growth_rate")
 
 # change levels of the species factor
 grow_plot$species <- factor(grow_plot$species, 
@@ -153,7 +153,7 @@ levels(grow_plot$species) <- c("F. spiralis", "F. vesiculosus", "A. nodosum", "F
 
 # change the levels of the depth factor
 grow_plot$depth <- factor(grow_plot$depth)
-levels(grow_plot$depth) <-  paste0("DZ", c("1", "2", "3", "4"))
+levels(grow_plot$depth) <-  c("1", "2", "3", "4")
 
 p3 <- 
   ggplot() +
@@ -166,7 +166,7 @@ p3 <-
             position = position_dodge(0.25), show.legend = FALSE) +
   scale_colour_manual(values = seaweed_pal()) +
   # scale_y_continuous(limits = c(-0.01, 0.02)) +
-  xlab("") +
+  xlab("Depth zone") +
   ylab(expression("Relative growth rate"~(g~g^{-1}~day^{-1}) )) +
   ggtitle("") +
   theme_meta() +
@@ -202,11 +202,10 @@ prod_raw <-
 
 # plot the raw productivity across depth zones integrated across growth rates
 prod <- 
-  bind_rows(prod_raw, .id = "loss") %>%
-  pivot_longer(cols = c("fu_se", "as_no", "fu_ve", "fu_sp"),
-               names_to = "species",
-               values_to = "prod") %>%
-  group_by(depth, species)
+  dplyr::bind_rows(prod_raw, .id = "loss") |>
+  tidyr::pivot_longer(cols = c("fu_se", "as_no", "fu_ve", "fu_sp"),
+                      names_to = "species",
+                      values_to = "prod")
 
 # change factor levels of species
 prod$species <- factor(prod$species, levels = c("fu_sp", "fu_ve", "as_no", "fu_se"))
@@ -217,13 +216,13 @@ levels(prod$loss) <- c("Intact", "F. serratus Extinct + (10% comp.)")
 
 # summarise the data for each zone
 prod_sum <- 
-  prod %>%
-  group_by(loss, depth) %>%
-  summarise(prod_sum = sum(prod))
+  prod |>
+  dplyr::group_by(loss, depth) |>
+  dplyr::summarise(prod_sum = sum(prod))
 
 # change the levels of the depth factor
 prod_sum$depth <- factor(prod_sum$depth)
-levels(prod_sum$depth) <-  paste0("DZ", c("1", "2", "3", "4"))
+levels(prod_sum$depth) <-  c("1", "2", "3", "4")
 
 p4 <- 
   ggplot(prod_sum,
@@ -233,11 +232,11 @@ p4 <-
   geom_bar(width = 0.5, stat = "identity", position = "dodge",
            alpha = 0.65, colour = "black") +
   scale_fill_manual(values = c("black", "grey")) +
-  xlab("") +
+  xlab("Depth zone") +
   ylab(expression("Dry biomass prod."~(g~day^{-1}) )) +
   theme_meta() +
   ggtitle("") +
-  scale_y_continuous(expand = c(0,0), limits = c(0, 6)) +
+  scale_y_continuous(expand = c(0,0), limits = c(0, 4.5)) +
   theme(legend.position = c(0.4, 0.85),
         legend.title = element_blank(),
         legend.text = element_text(size = 9),

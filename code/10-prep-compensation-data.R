@@ -79,7 +79,7 @@ for(i in 1:length(sp_vec)) {
             sp_ssb <- names(x_ssb)[apply(x_ssb, 2, function(x) any(x > 0))]
             
             # get intersecting species i.e. positive growth and adjacent zone
-            sp_comp <- intersect(sp_grow, sp_ssb)
+            sp_comp <- dplyr::intersect(sp_grow, sp_ssb)
             
             # if there is more than one suitable species, we sample one randomly
             if( length(sp_comp) > 0 ) {
@@ -118,7 +118,7 @@ for(i in 1:length(sp_vec)) {
         } )
       
       # bind into a data.frame
-      comp <- bind_rows(comp, .id = "sample_gr")
+      comp <- dplyr::bind_rows(comp, .id = "sample_gr")
       comp$comp_level <- comp_level
       
       return(comp)
@@ -126,7 +126,7 @@ for(i in 1:length(sp_vec)) {
     } )
   
   # bind the rows
-  prod <- bind_rows(prod)
+  prod <- dplyr::bind_rows(prod)
   prod$species_ext <- sp_ext
   
   # write into the list
@@ -135,14 +135,13 @@ for(i in 1:length(sp_vec)) {
 }
 
 # bind into one big data.frame
-sp_out <- bind_rows(sp_out)
+sp_out <- dplyr::bind_rows(sp_out)
 head(sp_out)
 
 # reorder the columns
 sp_out <- 
-  sp_out %>%
-  select(species_ext, comp_level, sample_gr, depth, 
-         prod_init, prod_comp)
+  sp_out |>
+  dplyr::select(species_ext, comp_level, sample_gr, depth, prod_init, prod_comp)
 
 # save the data as a .rds file
 saveRDS(sp_out, file = "output/compensation_analysis_data.rds")

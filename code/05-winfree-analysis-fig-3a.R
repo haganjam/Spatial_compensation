@@ -114,14 +114,14 @@ sp_pool_lev <-
         } )
       
       # bind the rows into a data.frame and summarise
-      sp_pool <- bind_rows(sp_pool)
+      sp_pool <- dplyr::bind_rows(sp_pool)
       
       return(sp_pool)
       
     } )
   
   # bind into a data.frame
-  sp_pool_df <- bind_rows(sp_pool_list, .id = "sample")
+  sp_pool_df <- dplyr::bind_rows(sp_pool_list, .id = "sample")
   
   # add the threshold as a variable
   sp_pool_df$threshold <- func_lev
@@ -132,7 +132,7 @@ sp_pool_lev <-
 } )
 
 # bind the Winfree et al. (2018) output into a data.frame
-sp_pool_lev <- bind_rows(sp_pool_lev)
+sp_pool_lev <- dplyr::bind_rows(sp_pool_lev)
 
 # check the distribution of these different levels
 ggplot(data = sp_pool_lev,
@@ -142,12 +142,12 @@ ggplot(data = sp_pool_lev,
 
 # summarise into a mean and percentile interval
 sp_pool_lev <- 
-  sp_pool_lev %>%
-  group_by(threshold, n_sites) %>%
-  summarise(richness_required_m = mean(richness_required),
-            richness_required_sd = sd(richness_required), .groups = "drop") %>%
-  mutate(n_sites = as.numeric(n_sites),
-         Thresh. = as.character(threshold))
+  sp_pool_lev |>
+  dplyr::group_by(threshold, n_sites) |>
+  dplyr::summarise(richness_required_m = mean(richness_required),
+                   richness_required_sd = sd(richness_required), .groups = "drop") |>
+  dplyr::mutate(n_sites = as.numeric(n_sites),
+                Thresh. = as.character(threshold))
 print(sp_pool_lev)
 
 # get a colour palette

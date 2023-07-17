@@ -6,7 +6,6 @@
 
 # load relevant libraries
 library(dplyr)
-library(readr)
 library(tidyr)
 library(ggplot2)
 
@@ -19,40 +18,40 @@ prod_list <- readRDS("output/model_productivity.rds")
 
 # plot the raw productivity across depth zones integrated across growth rates
 prod <- 
-  bind_rows(prod_list, .id = "sample_gr") %>%
-  pivot_longer(cols = c("fu_se", "as_no", "fu_ve", "fu_sp"),
-               names_to = "species",
-               values_to = "prod")
+  dplyr::bind_rows(prod_list, .id = "sample_gr") |>
+  tidyr::pivot_longer(cols = c("fu_se", "as_no", "fu_ve", "fu_sp"),
+                      names_to = "species",
+                      values_to = "prod")
 
 # translate the productivity data so that it is above zero
 prod <- 
-  prod %>%
-  group_by(sample_gr, depth_zone) %>%
-  mutate(prod_trans = prod + abs(min(prod))) %>%
-  ungroup()
+  prod |>
+  dplyr::group_by(sample_gr, depth_zone) |>
+  dplyr::mutate(prod_trans = prod + abs(min(prod))) |>
+  dplyr::ungroup()
 
 # calculate species contributions
 # calculate the species richness at each site for each growth rate sample
 prod <- 
-  prod %>%
-  group_by(sample_gr, depth_zone) %>%
-  mutate(prod_contr = prod_trans/sum(prod_trans),
-         exp_contr = 1/sum(prod != 0)) %>%
-  ungroup()
+  prod |>
+  dplyr::group_by(sample_gr, depth_zone) |>
+  dplyr::mutate(prod_contr = prod_trans/sum(prod_trans),
+                exp_contr = 1/sum(prod != 0)) |>
+  dplyr::ungroup()
 
 # classify species as dominant or not within a site
 prod <- 
-  prod %>%
-  mutate(dom_01 = ifelse(prod_contr == 1, 1, 
-                         ifelse(prod_contr > exp_contr, 1, 0)))
+  prod |>
+  dplyr::mutate(dom_01 = ifelse(prod_contr == 1, 1, 
+                                ifelse(prod_contr > exp_contr, 1, 0)))
 
 # how many species are dominant in at least one site
 prop_sp_dom <- 
-  prod %>%
-  group_by(sample_gr) %>%
-  filter(dom_01 == 1) %>%
-  summarise(prop_sp_dom = length(unique(species))/4) %>%
-  ungroup()
+  prod |>
+  dplyr::group_by(sample_gr) |>
+  dplyr::filter(dom_01 == 1) |>
+  dplyr::summarise(prop_sp_dom = length(unique(species))/4) |>
+  dplyr::ungroup()
 unique(prop_sp_dom$prop_sp_dom)
 
 # check for missing values
@@ -61,11 +60,11 @@ summary(prop_sp_dom$prop_sp_dom)
 
 # get the mean and standard deviation
 m_sd <- 
-  prop_sp_dom %>%
-  summarise(m = mean(prop_sp_dom),
-            sd = sd(prop_sp_dom),
-            PI_low = quantile(prop_sp_dom, 0.05),
-            PI_high = quantile(prop_sp_dom, 0.95))
+  prop_sp_dom |>
+  dplyr::summarise(m = mean(prop_sp_dom),
+                   sd = sd(prop_sp_dom),
+                   PI_low = quantile(prop_sp_dom, 0.05),
+                   PI_high = quantile(prop_sp_dom, 0.95))
 print(m_sd)
 
 # check the summary statistics
@@ -73,9 +72,9 @@ summary(prop_sp_dom)
 
 # summarise the prop_sp_dom data into a histogram dataset
 prop_sp_dom <- 
-  prop_sp_dom %>%
-  group_by(prop_sp_dom) %>%
-  summarise(n = n())
+  prop_sp_dom |>
+  dplyr::group_by(prop_sp_dom) |>
+  dplyr::summarise(n = dplyr::n())
 
 p1 <- 
   ggplot() +

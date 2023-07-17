@@ -20,91 +20,92 @@ sp_dat <- readRDS(file = "output/compensation_analysis_data.rds")
 head(sp_dat)
 
 # convert to a tibble
-sp_dat <- tibble(sp_dat)
+sp_dat <- dplyr::tibble(sp_dat)
 head(sp_dat)
 
 # calculate the productivity across depth zones initially and under compensation
 sp_all <- 
-  sp_dat %>%
-  mutate(depth = "All") %>%
-  group_by(depth, species_ext, comp_level, sample_gr) %>%
-  summarise(prod_init = sum(prod_init),
-            prod_comp = sum(prod_comp), .groups = "drop") %>%
-  select(species_ext, comp_level, sample_gr, depth, prod_init, prod_comp)
+  sp_dat |>
+  dplyr::mutate(depth = "All") |>
+  dplyr::group_by(depth, species_ext, comp_level, sample_gr) |>
+  dplyr::summarise(prod_init = sum(prod_init),
+                   prod_comp = sum(prod_comp), .groups = "drop") |>
+  dplyr::select(species_ext, comp_level, sample_gr, depth, prod_init, prod_comp)
 
 # bind the species all onto the sp_dat data.frame
-sp_dat <- bind_rows(sp_dat, sp_all)
+sp_dat <- dplyr::bind_rows(sp_dat, sp_all)
 
 # arrange the data in sp_dat
 sp_dat <- 
   sp_dat %>%
-  arrange(species_ext, comp_level, sample_gr, depth)
+  dplyr::arrange(species_ext, comp_level, sample_gr, depth)
 
 # calculate the change in productivity
 sp_dat <- 
   sp_dat %>%
-  mutate(prod_change = (prod_comp - prod_init)) %>%
-  mutate(depth = as.character(depth),
-         comp_level = as.character(comp_level))
+  dplyr::mutate(prod_change = (prod_comp - prod_init)) %>%
+  dplyr::mutate(depth = as.character(depth),
+                comp_level = as.character(comp_level))
 
 # check the summary
 summary(sp_dat)
 
 # change the factor levels of depth
 sp_dat$depth <- factor(sp_dat$depth)
-levels(sp_dat$depth) <- c(paste0("DZ", c("1", "2", "3", "4")), "All")
+levels(sp_dat$depth) <- c("1", "2", "3", "4", "All")
 
 # check the summary data
 summary(sp_dat)
 
 # sample 100 points randomly from each category
 sp_sub <- 
-  sp_dat %>%
-  group_by(species_ext, depth, comp_level) %>%
-  sample_n(size = 100) %>%
-  filter(comp_level %in% c(0.1, 0.5, 0.9)) %>%
-  filter(prod_change != 0)
+  sp_dat |>
+  dplyr::group_by(species_ext, depth, comp_level) |>
+  dplyr::sample_n(size = 100) |>
+  dplyr::filter(comp_level %in% c(0.1, 0.5, 0.9)) |>
+  dplyr::filter(prod_change != 0)
 summary(sp_sub)
 
 # check the maximum and minimum prod change for each species
-sp_sub %>%
-  group_by(species_ext) %>%
-  summarise(range = range(prod_change))
+sp_sub |>
+  dplyr::group_by(species_ext) |>
+  dplyr::summarise(range = range(prod_change))
 
 # summarise the data
 sp_sum <- 
-  sp_dat %>%
-  group_by(species_ext, depth, comp_level) %>%
-  summarise(mu = mean(prod_change),
-            PI_low = quantile(prod_change, 0.05),
-            PI_high = quantile(prod_change, 0.95),
-            n = n(), .groups = "drop") %>%
-  filter(comp_level %in% c(0.1, 0.5, 0.9))
+  sp_dat |>
+  dplyr::group_by(species_ext, depth, comp_level) |>
+  dplyr::summarise(mu = mean(prod_change),
+                   PI_low = quantile(prod_change, 0.05),
+                   PI_high = quantile(prod_change, 0.95),
+                   n = n(), .groups = "drop") |>
+  dplyr::filter(comp_level %in% c(0.1, 0.5, 0.9))
 print(sp_sum)
 
 # calculate percentage change from the mean
 sp_PPE <- 
-  sp_dat %>%
-  group_by(species_ext, depth, comp_level) %>%
-  mutate(perc_change = (prod_change/prod_init)*100 ) %>%
-  summarise(mu_change = mean(perc_change),
-            PI_low = quantile(perc_change, 0.05),
-            PI_high = quantile(perc_change, 0.95), .groups = "drop") %>%
-  filter(comp_level %in% c(0.1, 0.5, 0.9))
+  sp_dat |>
+  dplyr::group_by(species_ext, depth, comp_level) |>
+  dplyr::mutate(perc_change = (prod_change/prod_init)*100 ) |>
+  dplyr::summarise(mu_change = mean(perc_change),
+                   PI_low = quantile(perc_change, 0.05),
+                   PI_high = quantile(perc_change, 0.95), .groups = "drop") |>
+  dplyr::filter(comp_level %in% c(0.1, 0.5, 0.9))
 View(sp_PPE)
 
 # generate summary tables: table 1 and table S5
 
 # generate a supplementary table with the rest of the percentage changes
 tab_sum <- 
-  sp_PPE %>%
-  mutate(mu_and_PI = paste0(round(mu_change, 1), " [",
-                            round(PI_low, 1), " - (",
-                            round(PI_high, 1), ")]" )) %>%
-  select(species_ext, depth, comp_level, mu_and_PI) %>%
-  pivot_wider(id_cols = c("species_ext", "depth"),
-              names_from = "comp_level",
-              values_from = "mu_and_PI")
+  sp_PPE |>
+  dplyr::mutate(mu_and_PI = paste0(round(mu_change, 1), " [",
+                                   round(PI_low, 1), " - (",
+                                   round(PI_high, 1), ")]" )) |>
+  dplyr::select(species_ext, depth, comp_level, mu_and_PI) |>
+  tidyr::pivot_wider(id_cols = c("species_ext", "depth"),
+                     names_from = "comp_level",
+                     values_from = "mu_and_PI"
+                     )
 print(tab_sum)
 
 # rename the columns
@@ -115,24 +116,24 @@ tab_sum$`Species extinct` <- factor(tab_sum$`Species extinct`, levels = c("fu_sp
 levels(tab_sum$`Species extinct`) <- c("F. spiralis", "F. vesiculosus", "A. nodosum", "F. serratus")
 
 # arrange and rename the species from their binomial codes
-tab_sum <- arrange(tab_sum, `Species extinct`)
+tab_sum <- dplyr::arrange(tab_sum, `Species extinct`)
 
 # table 1: main text
 tab_1 <- 
-  tab_sum %>%
-  filter(`Depth zone` == "All") %>%
-  select(-`Depth zone`)
+  tab_sum |>
+  dplyr::filter(`Depth zone` == "All") |>
+  dplyr::select(-`Depth zone`)
 
 # export this table to a .csv file
-write_csv(x = tab_1, file = "figures-tables/table_1.csv")
+readr::write_csv(x = tab_1, file = "figures-tables/table_1.csv")
 
 # table S5: supplementary information
 tab_s5 <- 
-  tab_sum %>%
-  filter(`Depth zone` != "All")
+  tab_sum |>
+  dplyr::filter(`Depth zone` != "All")
 
 # export this table to a .csv file
-write_csv(x = tab_s5, file = "figures-tables/table_S5.csv")
+readr::write_csv(x = tab_s5, file = "figures-tables/table_S5.csv")
 
 
 # plot these four graphs individually for each species
@@ -141,7 +142,7 @@ sp_names <- c("F. spiralis Extinct", "F. vesiculosus Extinct", "A. nodosum Extin
 
 # axis labels
 ylabs <- c(expression("Change in productivity"~(g~day^{-1}) ), "", expression("Change in productivity"~(g~day^{-1}) ), "")
-xlabs <- list(NULL, NULL, NULL, NULL)
+xlabs <- list(NULL, NULL, "Depth zone", "Depth zone")
 x.text <- c("white", "white", "black", "black")
 x.text.size <- c(1, 1, 12, 12)
 
@@ -171,9 +172,10 @@ for(i in 1:length(sp_code)) {
   
   # set-up a data.frame for plotting tiles behind the ALL zone
   all_zone_bar <- 
-    tibble(depth = factor(levels(sp_dat$depth), levels = levels(sp_dat$depth)),
-           midpoint = all_zone[[i]][["midpoint"]],
-           bar_height = c(rep(0, 4), all_zone[[i]][["height"]]))
+    dplyr::tibble(depth = factor(levels(sp_dat$depth), 
+                                 levels = levels(sp_dat$depth)),
+                  midpoint = all_zone[[i]][["midpoint"]],
+                  bar_height = c(rep(0, 4), all_zone[[i]][["height"]]))
   
   px <- 
     ggplot() +
@@ -219,12 +221,12 @@ for(i in 1:length(sp_code)) {
 
 # join these graphs into a single graph
 p1 <- 
-  ggarrange(plots[[1]], plots[[2]], plots[[3]], plots[[4]],
-            nrow = 2, ncol = 2,
-            common.legend = TRUE, legend = "bottom",
-            labels = c("a", "b", "c", "d"),
-            font.label = list(face = "plain", size = 11),
-            heights = c(1, 1.2))
+  ggpubr::ggarrange(plotlist = plots,
+                    nrow = 2, ncol = 2,
+                    common.legend = TRUE, legend = "bottom",
+                    labels = c("a", "b", "c", "d"),
+                    font.label = list(face = "plain", size = 11),
+                    heights = c(1, 1.2))
 plot(p1)
 
 ggsave(filename = "figures-tables/fig_4.svg", p1,

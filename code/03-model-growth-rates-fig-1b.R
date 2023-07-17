@@ -21,26 +21,26 @@ gr_dat <- read_csv("data/growth_rate_data.csv")
 head(gr_dat)
 
 # calculate the number of missing individuals
-gr_dat %>%
-  filter(site_code %in% c("X", "Y") ) %>%
-  group_by(binomial_code) %>%
-  summarise(n = n(),
-            not_NA = sum(!is.na(dry_weight_g_daily_change)),
-            n_NA = sum(is.na(dry_weight_g_daily_change)),
-            )
+gr_dat |>
+  dplyr::filter(site_code %in% c("X", "Y") ) |>
+  dplyr::group_by(binomial_code) |>
+  dplyr::summarise(n = dplyr::n(),
+                   not_NA = sum(!is.na(dry_weight_g_daily_change)),
+                   n_NA = sum(is.na(dry_weight_g_daily_change)),
+                   .groups = "drop")
 
 # remove growth rate NAs
 gr_dat <- 
-  gr_dat %>%
-  filter(!is.na(dry_weight_g_daily_change))
+  gr_dat |>
+  dplyr::filter(!is.na(dry_weight_g_daily_change))
 
 # check the sites
 unique(gr_dat$site_code)
 
 # get site X and Y which is the same site as the transects
 gr_dat <- 
-  gr_dat %>%
-  filter(site_code %in% c("X", "Y") )
+  gr_dat |>
+  dplyr::filter(site_code %in% c("X", "Y") )
 
 # compare the growth rates overall among species
 ggplot(data = gr_dat,
@@ -114,12 +114,12 @@ for(i in pars) {
 m1_sum <- summary(m1_fit)
 
 # convert to tibble and add parameter names
-tab_s4 <- as_tibble(m1_sum$summary)
-tab_s4 <- bind_cols(tibble(parameter = row.names(m1_sum$summary)),
-                    tab_s4)
+tab_s4 <- dplyr::as_tibble(m1_sum$summary)
+tab_s4 <- dplyr::bind_cols(dplyr::tibble(parameter = row.names(m1_sum$summary)),
+                           tab_s4)
 
 # select relevant columns
-tab_s4 <- select(tab_s4, parameter, mean, sd, n_eff, Rhat)
+tab_s4 <- dplyr::select(tab_s4, parameter, mean, sd, n_eff, Rhat)
 
 # rename the columns
 names(tab_s4) <- c("Parameter", "Mean", "SD", "Effective number of samples", "R-hat")
@@ -128,10 +128,10 @@ names(tab_s4) <- c("Parameter", "Mean", "SD", "Effective number of samples", "R-
 tab_s4 <- tab_s4[-nrow(tab_s4),]
 
 # remove the vbar_mat parameter as these are only for calculation purposes
-tab_s4 <- filter(tab_s4, !grepl(pattern = "vbar_mat", Parameter) )
+tab_s4 <- dplyr::filter(tab_s4, !grepl(pattern = "vbar_mat", Parameter) )
 
 # export this table as a .csv file
-write_csv(x = tab_s4, file = "figures-tables/table_S4.csv")
+readr::write_csv(x = tab_s4, file = "figures-tables/table_S4.csv")
 
 # extract the samples from the estimated posterior distribution
 m1_post <- rstan::extract(m1_fit)
@@ -169,13 +169,13 @@ dat_sp$PI_low <- apply(mu, 2, min)
 dat_sp$PI_high <- apply(mu, 2, max)
 
 # bind the data list with the predictions into a data.frame
-obs <- bind_cols(dat_sp)
+obs <- dplyr::bind_cols(dat_sp)
 pred <- 
-  obs %>%
-  group_by(species, depth) %>%
-  summarise(mu = first(mu), 
-            PI_low = first(PI_low),
-            PI_high = first(PI_high))
+  obs |>
+  dplyr::group_by(species, depth) |>
+  dplyr::summarise(mu = dplyr::first(mu), 
+                   PI_low = dplyr::first(PI_low),
+                   PI_high = dplyr::first(PI_high))
 
 # plot the observed data versus the model predictions
 ggplot() +
@@ -262,11 +262,11 @@ gr_dat$species <- factor(gr_dat$binomial_code, levels = c("fu_sp", "fu_ve", "as_
 # df_pred
 df_pred_plot <- df_pred
 df_pred_plot$depth <- factor(df_pred_plot$depth)
-levels(df_pred_plot$depth) <- paste0("DZ", c("1", "2", "3", "4"))
+levels(df_pred_plot$depth) <- c("1", "2", "3", "4")
 
 # raw data gr_dat
 gr_dat$depth <- factor(gr_dat$depth, levels = c("4", "3", "2", "1"))
-levels(gr_dat$depth) <- paste0("DZ", c("1", "2", "3", "4"))
+levels(gr_dat$depth) <- c("1", "2", "3", "4")
 
 p1 <- 
   ggplot() +
@@ -287,7 +287,7 @@ p1 <-
             position = position_dodge(0.25)) +
   # scale_colour_viridis_d(option = "A", end = 0.9) +
   scale_colour_manual(values = seaweed_pal()) +
-  xlab("") +
+  xlab("Depth zone") +
   ylab(expression("Dry biomass change"~(g~g^{-1}~day^{-1}) )) +
   theme_meta() +
   theme(legend.position = "none",
@@ -307,11 +307,11 @@ sim_gr <-
   
   # manipulate the data.frame to the appropriate long format
   x <- 
-    x %>%
-    pivot_wider(id_cols = "depth",
-                names_from = "species",
-                values_from = "growth") %>%
-    select(depth, fu_se, as_no, fu_ve, fu_sp)
+    x |>
+    tidyr::pivot_wider(id_cols = "depth",
+                       names_from = "species",
+                       values_from = "growth") |>
+    dplyr::select(depth, fu_se, as_no, fu_ve, fu_sp)
   
   return(x)
   

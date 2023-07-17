@@ -533,7 +533,7 @@ tra_plot$species <- factor(tra_plot$species,
 
 # modify the depth zone factor
 tra_plot$depth <- factor(tra_plot$depth)
-levels(tra_plot$depth) <- paste0("DZ", c("1", "2", "3", "4"))
+levels(tra_plot$depth) <- paste0(c("1", "2", "3", "4"))
 
 p2 <- 
   ggplot(data = tra_plot,

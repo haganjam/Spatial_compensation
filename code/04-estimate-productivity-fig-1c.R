@@ -49,34 +49,34 @@ saveRDS(object = prod_list, "output/model_productivity.rds")
 
 # plot the raw productivity across depth zones integrated across growth rates
 prod <- 
-  bind_rows(prod_list, .id = "sample_gr") %>%
-  pivot_longer(cols = c("fu_se", "as_no", "fu_ve", "fu_sp"),
-               names_to = "species",
-               values_to = "prod") %>%
-  group_by(depth_zone, species) %>%
-  summarise(prod_m = mean(prod, na.rm = TRUE),
-            PI_low = quantile(prod, 0.05),
-            PI_high = quantile(prod, 0.95))
+  dplyr::bind_rows(prod_list, .id = "sample_gr") |>
+  tidyr::pivot_longer(cols = c("fu_se", "as_no", "fu_ve", "fu_sp"),
+                      names_to = "species",
+                      values_to = "prod") |>
+  dplyr::group_by(depth_zone, species) |>
+  dplyr::summarise(prod_m = mean(prod, na.rm = TRUE),
+                   PI_low = quantile(prod, 0.05),
+                   PI_high = quantile(prod, 0.95))
 
 # change factor levels of species
 prod$species <- factor(prod$species, levels = c("fu_sp", "fu_ve", "as_no", "fu_se"))
 
 # change the factor levels of depth
 prod$depth <- factor(prod$depth_zone)
-levels(prod$depth) <- paste0("DZ", c("1", "2", "3", "4"))
+levels(prod$depth) <- c("1", "2", "3", "4")
 
 # calculate total productivity and summarise into the mean and percentile intervals
 prod_sum <- 
-  bind_rows(prod_list, .id = "sample_gr") %>%
-  mutate(total_prod = (fu_se + as_no + fu_ve + fu_sp)) %>%
-  group_by(depth_zone) %>%
-  summarise(total_prod_m = mean(total_prod, na.rm = TRUE),
-            PI_low = quantile(total_prod, 0.05),
-            PI_high = quantile(total_prod, 0.95))
+  dplyr::bind_rows(prod_list, .id = "sample_gr") |>
+  dplyr::mutate(total_prod = (fu_se + as_no + fu_ve + fu_sp)) |>
+  dplyr::group_by(depth_zone) |>
+  dplyr::summarise(total_prod_m = mean(total_prod, na.rm = TRUE),
+                   PI_low = quantile(total_prod, 0.05),
+                   PI_high = quantile(total_prod, 0.95))
 
 # change the factor levels of depth
 prod_sum$depth <- factor(prod_sum$depth_zone)
-levels(prod_sum$depth) <- paste0("DZ", c("1", "2", "3", "4"))
+levels(prod_sum$depth) <- c("1", "2", "3", "4")
 
 p1 <- 
   ggplot() +
@@ -96,7 +96,7 @@ p1 <-
                 width = 0, colour = "red") +
   # scale_colour_viridis_d(option = "A", end = 0.9) +
   scale_colour_manual(values = seaweed_pal()) +
-  xlab("") +
+  xlab("Depth zone") +
   ylab(expression("Dry biomass prod."~(g~day^{-1}) )) +
   theme_meta() +
   theme(legend.position = "none",
