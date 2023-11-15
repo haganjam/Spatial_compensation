@@ -97,7 +97,7 @@ sp_PPE <-
                    PI_low = quantile(perc_change, 0.05),
                    PI_high = quantile(perc_change, 0.95), .groups = "drop") |>
   dplyr::filter(comp_level %in% c(0.1, 0.5, 0.9))
-View(sp_PPE)
+# View(sp_PPE)
 
 # generate summary tables: table 1 and table S5
 
@@ -235,7 +235,44 @@ p1 <-
                     heights = c(1, 1.25))
 plot(p1)
 
-ggsave(filename = "figures-tables/fig_4.svg", p1,
+ggsave(filename = "figures-tables/fig_4.pdf", p1,
        units = "cm", width = 20, height = 18)
+
+# add a graph for the defence
+pd1 <- 
+  plots[[1]] +
+  xlab(xlabs[3]) +
+  theme(axis.text.x = element_text(colour = x.text[i], size = x.text.size[i]),
+        plot.title = element_blank()) +
+  theme(
+    panel.background = element_rect(fill='transparent'), #transparent panel bg
+    plot.background = element_rect(fill='transparent', color=NA), #transparent plot bg
+    panel.grid.major = element_blank(), #remove major gridlines
+    panel.grid.minor = element_blank(), #remove minor gridlines
+    legend.background = element_rect(fill='transparent', colour = 'transparent'), #transparent legend bg
+    legend.box.background = element_rect(fill='transparent', colour = 'transparent') #transparent legend panel
+  )
+pd2 <- 
+  plots[[2]] +
+  ylab(ylabs[1]) + 
+  xlab(xlabs[3]) +
+  theme(axis.text.x = element_text(colour = x.text[i], size = x.text.size[i]),
+        plot.title = element_blank()) +
+  theme(
+    panel.background = element_rect(fill='transparent'), #transparent panel bg
+    plot.background = element_rect(fill='transparent', color=NA), #transparent plot bg
+    panel.grid.major = element_blank(), #remove major gridlines
+    panel.grid.minor = element_blank(), #remove minor gridlines
+    legend.background = element_rect(fill='transparent', colour = 'transparent'), #transparent legend bg
+    legend.box.background = element_rect(fill='transparent', colour = 'transparent') #transparent legend panel
+  )
+pd12 <- 
+  ggpubr::ggarrange(pd1, pd2,
+                    nrow = 1, ncol = 2,
+                    common.legend = TRUE, legend = "bottom")
+plot(pd12)
+
+ggsave(filename = "figures-tables/fig_4_def.pdf", pd12,
+       units = "cm", width = 20, height = 12, bg = "transparent")
 
 ### END
