@@ -8,6 +8,11 @@
 # clear environment
 rm(list = ls())
 
+# create a figures-tables folder
+if(!dir.exists("figures-tables")){ 
+  dir.create("figures-tables") 
+}
+
 # load relevant libraries
 library(dplyr)
 library(readr)
