@@ -1,8 +1,8 @@
 #'@title: PI() 
 #'
 #'@description: function to calculate percentile confidence/credible interval
-#'from a vector of data. The function is taken from the rethinking-package
-#'McElreath (2020, https://rdrr.io/github/rmcelreath/rethinking/src/R/utilities.r)
+#'from a vector of data. The function is taken from the McElreath (2020,
+#'https://rdrr.io/github/rmcelreath/rethinking/src/R/utilities.r)
 #'
 #'@param samples vector of data to calculate the percentile interval on
 #'@param prob size of the percentile interval (default = 0.89)
@@ -35,8 +35,8 @@ PI <- PCI
 #'@title: var2() 
 #'
 #'@description: function to calculate variance that does not use (n-1) as
-#'the denominator. The function is taken from the rethinking-package
-#'McElreath (2020, https://rdrr.io/github/rmcelreath/rethinking/src/R/utilities.r)
+#'the denominator. The function is taken from McElreath (2020,
+#'https://rdrr.io/github/rmcelreath/rethinking/src/R/utilities.r)
 #'
 #'@param x vector of data to calculate the percentile interval on
 #' 
