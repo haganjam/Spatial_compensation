@@ -35,6 +35,8 @@ gr_miss <-
 
 # calculate average individuals per tile
 mean(gr_miss$not_NA)
+median(gr_miss$not_NA)
+range(gr_miss$not_NA)
 
 # remove growth rate NAs
 gr_dat <- 
