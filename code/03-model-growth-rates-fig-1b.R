@@ -24,13 +24,17 @@ gr_dat <- readr::read_csv("data/growth_rate_data.csv")
 head(gr_dat)
 
 # calculate the number of missing individuals
-gr_dat |>
+gr_miss <- 
+  gr_dat |>
   dplyr::filter(site_code %in% c("X", "Y") ) |>
-  dplyr::group_by(binomial_code) |>
+  dplyr::group_by(binomial_code, tile_id) |>
   dplyr::summarise(n = dplyr::n(),
                    not_NA = sum(!is.na(dry_weight_g_daily_change)),
                    n_NA = sum(is.na(dry_weight_g_daily_change)),
                    .groups = "drop")
+
+# calculate average individuals per tile
+mean(gr_miss$not_NA)
 
 # remove growth rate NAs
 gr_dat <- 
