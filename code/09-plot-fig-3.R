@@ -28,7 +28,7 @@ p12 <- plot_grid(p1, p2, nrow = 1, ncol = 2, align = "v",
                  )
 plot(p12)
 
-ggsave(filename = "figures-tables/fig_3.svg", p12,
+ggsave(filename = "figures-tables/fig_3.pdf", p12,
        units = "cm", width = 20, height = 10)
 
 ### END
