@@ -2,7 +2,7 @@
 
 This repository contains data and code for modelling the response of dry biomass productivity to species loss in a macroalgae system. It is associated with the following publication:
 
-+ *coming soon (hopefully)*
++ Hagan, JG (accepted). Compensation alters estimates of the number of species required to maintain ecosystem functioning across an emersion gradient: A case study with intertidal macroalgae. *Functional Ecology*. 
 
 ## data
 
@@ -32,3 +32,50 @@ This will create a local copy of all relevant package versions that were used to
 
 The description and licence files contain a variety of information regarding the licence under which the code was published, the contact details of the creator (me) and some notes on the package versions used to perform the analysis.
 
+## Reproducing the analysis 
+
+### Download the repository
+
+To reproduce the analyses reported, first download this repository to your computer. This can be done in two ways:
+
+**1. with git**
+
+For this, in the Terminal (Mac) navigate to the folder where you want the repository to live (commands may differ on Windows)
+
++ cd path/to/local/folder
+
+Then, type the following command:
+
+git clone https://github.com/JorenMSnoeks/BEF_rock_pools.git
+
+This should download the repository.
+
+**2. without git**
+
+If you don't have git installed, you can download the repository as zip file and save it locally.
+
+--> Clone or download (green button top right) --> Download Zip
+
+then save and extract the zip where you want the directory to be saved on your computer. To run the code correctly, it is important to create a R-Project. In R-Studio go to File > New Project... > Existing Directory > Choose the extracted directory.
+
+### Download the relevant packages
+
+For package version control, we used *renv* (Ushey and Wickham 2023). Therefore, in the repository, there is a renv lockfile (renv.lock) that contains information about the versions of all packages used in the analysis. 
+
+To download the correct versions of all packages that we used in the analysis, you need to install the renv package:
+
++ install.packages("renv")
+
+Once renv is installed, in the R-console, run the following command:
+
++ renv::restore()
+
+The restore() command will download the correct versions of all packages used in the analysis into a local folder in the repository called 'renv'.
+
+In some cases, installing the packages required to run the Bayesian models using renv can be tricky. If this is the case, then I recommend not using renv and installing the packages in the code individually. For more information about the packages needed to run the Bayesian models in Stan, see:
+
++ https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started
+
+### Run the scripts
+
+If all the packages are correctly installed and the data files are available in the *data* folder, the scripts should run smoothly. They should be run in order i.e. from 01-11. This will generate all relevant statistical analyses and figures which will be outputted into a folder called figures-tables.
