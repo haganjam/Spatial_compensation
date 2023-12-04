@@ -256,28 +256,4 @@ p1234 <- plot_grid(p1, p2, p3, p4, nrow = 2, ncol = 2, align = "v",
 ggsave(filename = "figures-tables/fig_2.pdf", p1234,
        units = "cm", width = 20, height = 18)
 
-# create an additional for the thesis defence
-
-# make the figures transparent
-plot_def <- list(p1, p2, p3, p4)
-plot_def <- lapply(plot_def, function(x){
-   y <- 
-     x +  theme(
-      panel.background = element_rect(fill='transparent'), #transparent panel bg
-      plot.background = element_rect(fill='transparent', color=NA), #transparent plot bg
-      panel.grid.major = element_blank(), #remove major gridlines
-      panel.grid.minor = element_blank(), #remove minor gridlines
-      legend.background = element_rect(fill='transparent'), #transparent legend bg
-      legend.box.background = element_rect(fill='transparent') #transparent legend panel
-    )
-   return(y)
-})
-
-# arrange the figure into four panels
-plot_def <- plot_grid(plotlist = plot_def, 
-                      nrow = 2, ncol = 2, align = "v")
-
-ggsave(filename = "figures-tables/fig_2_def.pdf", plot_def,
-       units = "cm", width = 20, height = 18, bg = "transparent")
-
 ### END

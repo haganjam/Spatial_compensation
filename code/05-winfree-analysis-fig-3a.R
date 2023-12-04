@@ -179,21 +179,6 @@ p1 <-
         plot.title = element_text(hjust = 0.5, vjust = 2.5))
 plot(p1)
 
-# export a figure for the defence
-pd <- 
-  p1 + 
-  theme(
-    panel.background = element_rect(fill='transparent'), #transparent panel bg
-    plot.background = element_rect(fill='transparent', color=NA), #transparent plot bg
-    panel.grid.major = element_blank(), #remove major gridlines
-    panel.grid.minor = element_blank(), #remove minor gridlines
-    legend.background = element_rect(fill='transparent', colour = 'transparent'), #transparent legend bg
-    legend.box.background = element_rect(fill='transparent', colour = 'transparent') #transparent legend panel
-  )
-plot(pd)
-ggsave(filename = "figures-tables/fig_3_def.pdf", pd,
-       units = "cm", width = 10, height = 8.5, bg = "transparent")
-
 # output as a .rds object
 saveRDS(p1, "output/fig_3a.rds")
 
