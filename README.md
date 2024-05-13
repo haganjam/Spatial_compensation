@@ -2,7 +2,9 @@
 
 This repository contains data and code for modelling the response of dry biomass productivity to species loss in a macroalgae system. It is associated with the following publication:
 
-+ Hagan, JG (accepted). Compensation alters estimates of the number of species required to maintain ecosystem functioning across an emersion gradient: A case study with intertidal macroalgae. *Functional Ecology*. 
++ Hagan, JG (2023). Compensation alters estimates of the number of species required to maintain ecosystem functioning across an emersion gradient: A case study with intertidal macroalgae. *Functional Ecology*. 
+
++ https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/1365-2435.14487
 
 ## data
 
